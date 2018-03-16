@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- To do:
+ * change vars to lets?
+ * fix quotes
+ * organize variables
+ * set bounds to san francisco area
+ * FIXME
+ * optimizations
+ * comment code
+ -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>San Francisco Emergency Trends</title>
+    <!-- use later
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=font1|font2|etc" type="text/css"> -->
+
+    <!-- <link rel="stylesheet" href="main.css" type="text/css"> -->
+
+    <script src="jquery.js"></script>
+    <script type="text/javascript" src="getCategoryData.js"></script>
+    <script src="Chart.js"></script>
+    <script src="markerclusterer.js"></script>
+    <script src="mostLikelyDispatch.js"></script>
+</head>
+
+<body>
+    <div id="banner">
+        <h1 id="page_title">San Francisco Emergency Response Statistics</h1>
+        <p>This webpage provides some trends found in data provided by<br /> the San Francisco Fire Department.</p>
+    </div>
+    <div id="content">
+
+    </div>
+
+
+    <div id="google_map" style="width:400px;height:300px;"></div>
+    <div id="geocoding_map" style="width:400px;height:300px;"></div>
+    <canvas id="call_type_chart" width="100" height="50" style="display: block; width = 100px; height = 50px;"></canvas>
+    <canvas id="incident_time_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
+    <canvas id="resolution_time_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
+
+
+
+
+    <div id="most_likely_dispatch">
+        Address <input type="text" id="address_input"> Time: (Please use the format 00:00 AM) <input type="text" id="time_input">
+
+
+        <button id="get_dispatch_button">Click to get matching dispatch!</button>
+    </div>
+    <div id="call_type_data">
+        <button id="alarm_button">Alarm data</button>
+        <button id="citizen_button">citizen data</button>
+        <button id="ele_haz_button">ele haz data</button>
+        <button id="ele_rescue_button">ele rescue data</button>
+        <button id="fuel_button">fuel data</button>
+        <button id="gas_button">gas data</button>
+        <button id="hazmat_button">hazmat data</button>
+        <button id="med_inc_button">med_inc data</button>
+        <button id="odor_button">odor data</button>
+        <button id="other_button">other data</button>
+        <button id="out_fire_button">out_fire data</button>
+        <button id="smoke_button">smoke data</button>
+        <button id="struct_fire_button">struct fire data</button>
+        <button id="traffic_button">traffic data</button>
+        <button id="train_button">train data</button>
+        <button id="vehicle_button">vehicle data</button>
+        <button id="resolution_button">resolution</button>
+    </div>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&callback=initialize"></script>
+
+    <script>
+        document.getElementById("get_dispatch_button").addEventListener("click", findAddress);
+
+        //FIXME reformat this
+
+      document.getElementById("resolution_button").addEventListener("click", function() {
+          updateChart(resolutionTimeChart, getResolutionTime());
+      });
+
+        document.getElementById("alarm_button").addEventListener("click", function() {
+            mapData("alarm");
+            updateChart(incidentTimeChart, getIncidentTimeData("alarm"));
+        });
+        document.getElementById("citizen_button").addEventListener("click", function() {
+            mapData("citizen");
+            updateChart(incidentTimeChart, getIncidentTimeData("citizen"));
+        });
+        document.getElementById("ele_haz_button").addEventListener("click", function() {
+            mapData("elehaz");
+        });
+        document.getElementById("ele_rescue_button").addEventListener("click", function() {
+            mapData("elerescue");
+        });
+        document.getElementById("fuel_button").addEventListener("click", function() {
+            mapData("fuel");
+        });
+        document.getElementById("gas_button").addEventListener("click", function() {
+            mapData("gas");
+        });
+        document.getElementById("hazmat_button").addEventListener("click", function() {
+            mapData("hazmat");
+        });
+        document.getElementById("med_inc_button").addEventListener("click", function() {
+            mapData("medinc");
+            updateChart(incidentTimeChart, getIncidentTimeData("medinc"));
+        });
+        document.getElementById("odor_button").addEventListener("click", function() {
+            mapData("odor");
+        });
+        document.getElementById("other_button").addEventListener("click", function() {
+            mapData("other");
+        });
+        document.getElementById("out_fire_button").addEventListener("click", function() {
+            mapData("outfire");
+        });
+        document.getElementById("smoke_button").addEventListener("click", function() {
+            mapData("smoke");
+        });
+        document.getElementById("struct_fire_button").addEventListener("click", function() {
+            mapData("structfire");
+        });
+        document.getElementById("traffic_button").addEventListener("click", function() {
+            mapData("traffic");
+        });
+        document.getElementById("train_button").addEventListener("click", function() {
+            mapData("train");
+        });
+        document.getElementById("vehicle_button").addEventListener("click", function() {
+            mapData("vehicle");
+        });
+
+        $(document).ready(function() {
+            $.ajax({
+                type: "GET",
+                url: "sfpd_data.csv",
+                dataType: "text",
+                success: function(data) {
+                    parseCSV(data);
+                }
+            });
+        });
+
+        /* This function goes through the data from the given CSV file
+         *  and puts it in a multidimensional array.
+         */
+        var csvData = [];
+
+        //FIXME move this to a better location
+        var callTypes = ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
+            'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
+            'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
+            'Vehicle Fire'];
+
+        function parseCSV(data) {
+            var allLines = data.split(/\n|\n\r/);
+            csvData = [];
+
+            // loop through all the lines to sort data into single incidents
+            for (var i = 1; i < allLines.length; i++) {
+                var line = allLines[i].split(",");
+                csvData.push(line);
+            }
+        }
+
+        // google maps variables
+        var geocoder;
+        var map;
+        var geocodeMap;
+        var markerCluster;
+        var locations = [];
+        var markers = [];
+
+        /* This function initializes all the maps on the page from the google maps API,
+         * including the geocoding map and the general map of San Francisco.
+         */
+        function initialize() {
+            geocoder = new google.maps.Geocoder();
+            var mapOptions = {
+                center: new google.maps.LatLng(37.7749, -122.4194),
+                zoom: 11,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            geocodeMap = new google.maps.Map(document.getElementById("geocoding_map"), mapOptions);
+            map = new google.maps.Map(document.getElementById("google_map"), mapOptions);
+
+            markerCluster = new MarkerClusterer(map, markers, {
+                imagePath: "./images/m"
+            });
+        }
+
+        /* This function places markers at the location of the incidents
+         * on a map.
+         */
+        function mapData(type) {
+            locations = [];
+            markers = [];
+            data = [];
+            markerCluster.clearMarkers();
+
+            data = getCategoryData(csvData, type);
+            console.log(data);
+
+            for (var i = 0; i < data.length; i++) {
+                locations.push(new google.maps.LatLng(data[i][0], data[i][1]));
+            }
+
+            var markers = locations.map(function(location, i) {
+                return new google.maps.Marker({
+                    position: location,
+                });
+            });
+
+            markerCluster = new MarkerClusterer(map, markers, {
+                imagePath: "./images/m"
+            });
+        }
+
+        function updateChart(chart, typeData) {
+            chart.data.datasets[0].data = typeData;
+            chart.update();
+        }
+
+        // the chart containing the number of all of the different types of incidents
+
+        new Chart(document.getElementById("call_type_chart"), {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [1061, 113, 20, 22, 9, 85, 2, 6790, 9, 128, 143, 14, 1028, 409, 54, 44]
+                }],
+
+                labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
+                    'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
+                    'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
+                    'Vehicle Fire'
+                ]
+            }
+        });
+
+        var resolutionTimeChart = new Chart(document.getElementById("resolution_time_chart"), {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                }],
+
+                labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
+                    'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
+                    'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
+                    'Vehicle Fire'
+                ]
+            }
+        });
+
+        var incidentTimeChart = new Chart(document.getElementById("incident_time_chart"), {
+            type: 'line',
+            data: {
+                datasets: [{
+                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    label: "Number of Occurences"
+                }],
+                labels: ['12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM',
+                    '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'
+                ]
+            }
+        });
+
+        /* This function gets the number of occurences of a incident type and sorts it
+         * by time of day within hour long intervals starting at the half-hour mark (for
+         * example, everything between 11:30 PM and 12:30 AM is considered to occur at 12 AM).
+         */
+        function getIncidentTimeData(type) {
+            var data = getCategoryData(csvData, type);
+            var time = [];
+            var incidentTimes = [];
+            var numOccurences = [];
+
+            for (var i = 0; i < data.length; i++) {
+                var temp = data[i][2].split(" ");
+                temp = temp[1].split(/:| /);
+                time.push(temp);
+            }
+
+            // initialize to 0
+            for (var i = 0; i < 24; i++) {
+                numOccurences.push(0);
+            }
+
+            console.log(data.length);
+
+            //sorts times into different categories
+            for (var i = 0; i < data.length; i++) {
+                if (parseInt(time[i][1]) < 30) {
+                    numOccurences[parseInt(time[i][0])] += 1;
+                } else {
+                    if (parseInt(time[i][0]) + 1 < 24) {
+                        numOccurences[parseInt(time[i][0]) + 1] += 1;
+                    } else {
+                        numOccurences[0] += 1;
+                    }
+                }
+            }
+            return numOccurences;
+        }
+
+        function getIncidentTimeChartData(type, numOccurences) {
+            var numOccurences = getIncidentTimeData(type);
+
+
+        }
+
+        /**
+         * This function returns the average resolution time for each call type.
+         */
+        function getResolutionTime() {
+            // holds the average resolution type of each element (indices correspond to type)
+            var timeData = [];
+            var resolutionData = [];
+            let temp = [];
+            let temp1 = [];
+
+
+            for (var i = 1; i < csvData.length - 1; i++) {
+                temp = [];
+                temp1 = [];
+                if (csvData[i][5].length > 1 && csvData[i][6].length > 1) {
+                    temp.push(csvData[i][0]);
+                    temp1.push(csvData[i][5]);
+                    temp1.push(csvData[i][6]);
+                    //console.log(temp1);
+                    temp.push(temp1);
+
+                    timeData.push(temp);
+                }
+            }
+
+            console.log(timeData);
+
+            temp = [];
+            for (var i = 0; i < timeData.length; i++) {
+                temp.push(calcTimeDiff(timeData[i][1]));
+                if (temp[0] > 500) {
+                    temp = [];
+                    continue;
+                }
+                timeData[i][1] = temp[0];
+                temp = [];
+            }
+
+
+
+            for (var i = 0; i < 16; i++) {
+                resolutionData.push(new Array());
+            }
+
+            for (var i = 0; i < timeData.length; i++) {
+                for (var j = 0; j < callTypes.length; j++) {
+                    if (timeData[i][0] == callTypes[j]) {
+                        resolutionData[j].push(timeData[i][1]);
+                    }
+                }
+            }
+
+
+
+            for (let i = 0; i < resolutionData.length; i++) {
+                resolutionData[i] = average(resolutionData[i]);
+            }
+
+            console.log(resolutionData);
+
+            return resolutionData;
+        }
+
+        function average(data) {
+            var sum = 0;
+            for (let i = 0; i < data.length; i++) {
+                sum += parseInt(data[i]);
+            }
+
+            return Math.round(sum / data.length);
+        }
+
+
+        function calcTimeDiff(data) {
+
+            var hourA = data[0].split(" ")[1].split(/:| /)[0];
+            var minuteA = data[0].split(" ")[1].split(/:| /)[1];
+
+            var hourB = data[1].split(" ")[1].split(/:| /)[0];
+            var minuteB = data[1].split(" ")[1].split(/:| /)[1];
+
+            if (hourA == hourB) {
+                return minuteB - minuteA;
+            }
+            else {
+                if (hourA > hourB) {
+                    hourA -= 12;
+                    hourB += 12;
+                    if (minuteA < minuteB) {
+                        return minuteB - minuteA + (hourB - hourA) * 60;
+                    }
+                }
+                minuteA = 60 - minuteA;
+                hourA = hourB - hourA - 1;
+                return minuteA + hourA * 60;
+            }
+        }
+
+    </script>
+    <p id="footer">Created by Katherine Kolman</p>
+</body>
+
+
+</html>
