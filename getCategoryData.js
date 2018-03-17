@@ -183,12 +183,24 @@ function getCategoryData(csvData, type) {
                 }
             }
             break;
+        case "water":
+            console.log(csvData.length);
+            for (var i = 0; i < csvData.length; i++) {
+                if (csvData[i][0] == "Water Rescue") {
+                    temp.push(csvData[i][22]); // latitude
+                    temp.push(csvData[i][23]); // longitude
+                    temp.push(csvData[i][2]); // received timestamp
+                    locData.push(temp);
+                    temp = [];
+                }
+            }
+            break;
         default:
             alert("error");
             break;
-        }
-
-        console.log(locData);
-
-        return locData;
     }
+
+    console.log(locData);
+
+    return locData;
+}

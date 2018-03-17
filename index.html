@@ -9,6 +9,8 @@
  * FIXME
  * optimizations
  * comment code
+ * give credit to outside resources (Chart.js, etc)
+ * parseFloat instead of parseInt
  -->
 
 <head>
@@ -37,8 +39,9 @@
     </div>
 
 
-    <div id="google_map" style="width:400px;height:300px;"></div>
+    <div id="marker_map" style="width:400px;height:300px;"></div>
     <div id="geocoding_map" style="width:400px;height:300px;"></div>
+    <div id="dispatch_time_heatmap" style="width:400px;height:300px;"></div>
     <canvas id="call_type_chart" width="100" height="50" style="display: block; width = 100px; height = 50px;"></canvas>
     <canvas id="incident_time_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
     <canvas id="resolution_time_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
@@ -69,19 +72,27 @@
         <button id="traffic_button">traffic data</button>
         <button id="train_button">train data</button>
         <button id="vehicle_button">vehicle data</button>
+        <button id="water_button">water data</button>
         <button id="resolution_button">resolution</button>
+        <button id="avg_dispatch_button">dispatch</button>
+        <button id="heatmap_data">heatmap</button>
+        <button id="init_button">init</button>
     </div>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&callback=initialize"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&libraries=visualization"></script>
 
     <script>
         document.getElementById("get_dispatch_button").addEventListener("click", findAddress);
 
         //FIXME reformat this
 
-      document.getElementById("resolution_button").addEventListener("click", function() {
-          updateChart(resolutionTimeChart, getResolutionTime());
-      });
+        document.getElementById("init_button").addEventListener("click", initialize);
+        document.getElementById("heatmap_data").addEventListener("click", getHeatmapData);
+        document.getElementById("resolution_button").addEventListener("click", function() {
+            updateChart(resolutionTimeChart, getResolutionTime());
+        });
+
+        document.getElementById("avg_dispatch_button").addEventListener("click", getHeatmapData);
 
         document.getElementById("alarm_button").addEventListener("click", function() {
             mapData("alarm");
@@ -93,18 +104,23 @@
         });
         document.getElementById("ele_haz_button").addEventListener("click", function() {
             mapData("elehaz");
+            updateChart(incidentTimeChart, getIncidentTimeData("elehaz"));
         });
         document.getElementById("ele_rescue_button").addEventListener("click", function() {
             mapData("elerescue");
+            updateChart(incidentTimeChart, getIncidentTimeData("elerescue"));
         });
         document.getElementById("fuel_button").addEventListener("click", function() {
             mapData("fuel");
+            updateChart(incidentTimeChart, getIncidentTimeData("fuel"));
         });
         document.getElementById("gas_button").addEventListener("click", function() {
             mapData("gas");
+            updateChart(incidentTimeChart, getIncidentTimeData("gas"));
         });
         document.getElementById("hazmat_button").addEventListener("click", function() {
             mapData("hazmat");
+            updateChart(incidentTimeChart, getIncidentTimeData("hazmat"));
         });
         document.getElementById("med_inc_button").addEventListener("click", function() {
             mapData("medinc");
@@ -112,30 +128,42 @@
         });
         document.getElementById("odor_button").addEventListener("click", function() {
             mapData("odor");
+            updateChart(incidentTimeChart, getIncidentTimeData("odor"));
         });
         document.getElementById("other_button").addEventListener("click", function() {
             mapData("other");
+            updateChart(incidentTimeChart, getIncidentTimeData("other"));
         });
         document.getElementById("out_fire_button").addEventListener("click", function() {
             mapData("outfire");
+            updateChart(incidentTimeChart, getIncidentTimeData("outfire"));
         });
         document.getElementById("smoke_button").addEventListener("click", function() {
             mapData("smoke");
+            updateChart(incidentTimeChart, getIncidentTimeData("smoke"));
         });
         document.getElementById("struct_fire_button").addEventListener("click", function() {
             mapData("structfire");
+            updateChart(incidentTimeChart, getIncidentTimeData("structfire"));
         });
         document.getElementById("traffic_button").addEventListener("click", function() {
             mapData("traffic");
+            updateChart(incidentTimeChart, getIncidentTimeData("traffic"));
         });
         document.getElementById("train_button").addEventListener("click", function() {
             mapData("train");
+            updateChart(incidentTimeChart, getIncidentTimeData("train"));
         });
         document.getElementById("vehicle_button").addEventListener("click", function() {
             mapData("vehicle");
+            updateChart(incidentTimeChart, getIncidentTimeData("vehicle"));
         });
+        document.getElementById("water_button").addEventListener("click", function() {
+            mapData("water");
+            updateChart(incidentTimeChart, getIncidentTimeData("water"));
+        })
 
-        $(document).ready(function() {
+    //    $(document).ready(function() {
             $.ajax({
                 type: "GET",
                 url: "sfpd_data.csv",
@@ -144,7 +172,7 @@
                     parseCSV(data);
                 }
             });
-        });
+    //    });
 
         /* This function goes through the data from the given CSV file
          *  and puts it in a multidimensional array.
@@ -155,7 +183,8 @@
         var callTypes = ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
             'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
             'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
-            'Vehicle Fire'];
+            'Vehicle Fire', 'Water Rescue'
+        ];
 
         function parseCSV(data) {
             var allLines = data.split(/\n|\n\r/);
@@ -170,8 +199,10 @@
 
         // google maps variables
         var geocoder;
-        var map;
+        var markerMap;
         var geocodeMap;
+        var dispatchTimeHeatmap;
+        var heatmap;
         var markerCluster;
         var locations = [];
         var markers = [];
@@ -181,15 +212,51 @@
          */
         function initialize() {
             geocoder = new google.maps.Geocoder();
-            var mapOptions = {
+            var options = {
                 center: new google.maps.LatLng(37.7749, -122.4194),
                 zoom: 11,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.ROADMAP // change the style and colors of map to fit theme of site
             };
-            geocodeMap = new google.maps.Map(document.getElementById("geocoding_map"), mapOptions);
-            map = new google.maps.Map(document.getElementById("google_map"), mapOptions);
+            geocodeMap = new google.maps.Map(document.getElementById("geocoding_map"), options);
+            markerMap = new google.maps.Map(document.getElementById("marker_map"), options);
+            dispatchTimeHeatmap = new google.maps.Map(document.getElementById("dispatch_time_heatmap"), options);
 
-            markerCluster = new MarkerClusterer(map, markers, {
+            var heatData = getHeatmapData();
+
+
+
+            console.log(heatData);
+
+            var gradient = [
+         'rgba(0, 255, 255, 0)',
+         'rgba(0, 255, 255, 1)',
+         'rgba(0, 191, 255, 1)',
+         'rgba(0, 127, 255, 1)',
+         'rgba(0, 63, 255, 1)',
+         'rgba(0, 0, 255, 1)',
+         'rgba(0, 0, 223, 1)',
+         'rgba(0, 0, 191, 1)',
+         'rgba(0, 0, 159, 1)',
+         'rgba(0, 0, 127, 1)',
+         'rgba(63, 0, 91, 1)',
+         'rgba(127, 0, 63, 1)',
+         'rgba(191, 0, 31, 1)',
+         'rgba(255, 0, 0, 1)'
+     ];
+
+            heatmap = new google.maps.visualization.HeatmapLayer(
+            );
+
+
+heatmap.set('opacity', .3);
+heatmap.set('dissipating', true);
+heatmap.set('maxIntensity', 10);
+
+            heatmap.setData(heatData);
+            heatmap.setMap(dispatchTimeHeatmap);
+            //console.log(heatmap.getData());
+
+            markerCluster = new MarkerClusterer(markerMap, markers, {
                 imagePath: "./images/m"
             });
         }
@@ -216,7 +283,7 @@
                 });
             });
 
-            markerCluster = new MarkerClusterer(map, markers, {
+            markerCluster = new MarkerClusterer(markerMap, markers, {
                 imagePath: "./images/m"
             });
         }
@@ -232,13 +299,13 @@
             type: 'doughnut',
             data: {
                 datasets: [{
-                    data: [1061, 113, 20, 22, 9, 85, 2, 6790, 9, 128, 143, 14, 1028, 409, 54, 44]
+                    data: [1061, 114, 21, 23, 10, 86, 3, 6791, 10, 129, 144, 15, 1029, 410, 55, 45, 54]
                 }],
 
                 labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
                     'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
                     'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
-                    'Vehicle Fire'
+                    'Vehicle Fire', 'Water Rescue'
                 ]
             }
         });
@@ -246,15 +313,30 @@
         var resolutionTimeChart = new Chart(document.getElementById("resolution_time_chart"), {
             type: 'bar',
             data: {
-                datasets: [{
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                datasets: [{ //FIXME call updateChart on page load to update this data
+                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }],
 
                 labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
                     'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
                     'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
-                    'Vehicle Fire'
+                    'Vehicle Fire', 'Water Rescue'
                 ]
+            },
+            options: {
+                scaleShowValues: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            autoSkip: false
+                        }
+                    }]
+                }
             }
         });
 
@@ -355,7 +437,7 @@
 
 
 
-            for (var i = 0; i < 16; i++) {
+            for (var i = 0; i < 17; i++) {
                 resolutionData.push(new Array());
             }
 
@@ -366,8 +448,6 @@
                     }
                 }
             }
-
-
 
             for (let i = 0; i < resolutionData.length; i++) {
                 resolutionData[i] = average(resolutionData[i]);
@@ -390,6 +470,8 @@
 
         function calcTimeDiff(data) {
 
+        //    console.log(data);
+
             var hourA = data[0].split(" ")[1].split(/:| /)[0];
             var minuteA = data[0].split(" ")[1].split(/:| /)[1];
 
@@ -398,8 +480,7 @@
 
             if (hourA == hourB) {
                 return minuteB - minuteA;
-            }
-            else {
+            } else {
                 if (hourA > hourB) {
                     hourA -= 12;
                     hourB += 12;
@@ -411,6 +492,67 @@
                 hourA = hourB - hourA - 1;
                 return minuteA + hourA * 60;
             }
+        }
+
+        function getHeatmapData() {
+            var heatmapData = [];
+            var dataPoints = [];
+
+        //    console.log(new google.maps.LatLng({lat: 37, lng: -122}));
+
+            let temp = [];
+            let temp1 = [];
+            for (let i = 0; i < csvData.length - 1; i++) {
+                temp = [];
+                temp1 = [];
+                if (csvData[i][3].length > 0 && csvData[i][5].length > 0 && csvData[i][21].length > 0
+                && csvData[i][22].length > 0 && csvData[i][23].length > 0) {
+                    temp1.push(csvData[i][3]);
+                    temp1.push(csvData[i][5]);
+                    temp.push(temp1);
+                    temp.push(csvData[i][21]);
+                    temp.push(csvData[i][22]);
+                    temp.push(csvData[i][23]);
+                    heatmapData.push(temp);
+                }
+            }
+
+            console.log(heatmapData);
+
+            temp = [];
+            for (let i = 0; i < heatmapData.length; i++) {
+                temp.push(calcTimeDiff(heatmapData[i][0]));
+                if (temp[0] > 500) {
+                    heatmapData[i][0] = 0;
+                    temp = [];
+                    continue;
+                }
+                else {
+                    heatmapData[i][0] = temp[0];
+                    temp = [];
+                }
+            }
+
+            console.log(heatmapData);
+
+            var temp2 = [3];
+            temp = [];
+            temp1 = [];
+            console.log(heatmapData.length);
+            for (var i = 0; i < heatmapData.length; i++) {
+                dataPoints.push({location: new google.maps.LatLng(parseFloat(heatmapData[i][2]), parseFloat(heatmapData[i][3])), weight: (((1/500) * parseFloat(heatmapData[i][0])) + 1)});
+            }
+
+
+console.log(dataPoints);
+
+
+            //console.log(dataPoints[4032].location.lat());
+            console.log(temp2)
+
+            return (dataPoints);
+
+
         }
 
     </script>
