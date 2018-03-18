@@ -20,7 +20,7 @@
     <!-- use later
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=font1|font2|etc" type="text/css"> -->
 
-    <!-- <link rel="stylesheet" href="main.css" type="text/css"> -->
+    <link rel="stylesheet" href="main.css" type="text/css">
 
     <script src="jquery.js"></script>
     <script type="text/javascript" src="getCategoryData.js"></script>
@@ -78,6 +78,8 @@
         <button id="heatmap_data">heatmap</button>
         <button id="init_button">init</button>
     </div>
+
+    <img src="./images/SF-skyline.png"></src>
 
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&libraries=visualization"></script>
 
@@ -391,12 +393,6 @@ heatmap.set('maxIntensity', 10);
             return numOccurences;
         }
 
-        function getIncidentTimeChartData(type, numOccurences) {
-            var numOccurences = getIncidentTimeData(type);
-
-
-        }
-
         /**
          * This function returns the average resolution time for each call type.
          */
@@ -407,7 +403,6 @@ heatmap.set('maxIntensity', 10);
             let temp = [];
             let temp1 = [];
 
-
             for (var i = 1; i < csvData.length - 1; i++) {
                 temp = [];
                 temp1 = [];
@@ -415,14 +410,10 @@ heatmap.set('maxIntensity', 10);
                     temp.push(csvData[i][0]);
                     temp1.push(csvData[i][5]);
                     temp1.push(csvData[i][6]);
-                    //console.log(temp1);
                     temp.push(temp1);
-
                     timeData.push(temp);
                 }
             }
-
-            console.log(timeData);
 
             temp = [];
             for (var i = 0; i < timeData.length; i++) {
@@ -434,8 +425,6 @@ heatmap.set('maxIntensity', 10);
                 timeData[i][1] = temp[0];
                 temp = [];
             }
-
-
 
             for (var i = 0; i < 17; i++) {
                 resolutionData.push(new Array());
@@ -453,8 +442,6 @@ heatmap.set('maxIntensity', 10);
                 resolutionData[i] = average(resolutionData[i]);
             }
 
-            console.log(resolutionData);
-
             return resolutionData;
         }
 
@@ -463,15 +450,11 @@ heatmap.set('maxIntensity', 10);
             for (let i = 0; i < data.length; i++) {
                 sum += parseInt(data[i]);
             }
-
             return Math.round(sum / data.length);
         }
 
 
         function calcTimeDiff(data) {
-
-        //    console.log(data);
-
             var hourA = data[0].split(" ")[1].split(/:| /)[0];
             var minuteA = data[0].split(" ")[1].split(/:| /)[1];
 
@@ -494,12 +477,7 @@ heatmap.set('maxIntensity', 10);
             }
         }
 
-        function getHeatmapData() {
-            var heatmapData = [];
-            var dataPoints = [];
-
-        //    console.log(new google.maps.LatLng({lat: 37, lng: -122}));
-
+        function getAvgDispatchTime() {
             let temp = [];
             let temp1 = [];
             for (let i = 0; i < csvData.length - 1; i++) {
@@ -511,13 +489,43 @@ heatmap.set('maxIntensity', 10);
                     temp1.push(csvData[i][5]);
                     temp.push(temp1);
                     temp.push(csvData[i][21]);
+                    heatmapData.push(temp);
+                }
+            }
+        }
+
+        /* This function returns all of the locations of all incidents and weights them according to
+         * their dispatch time. Longer dispatch times will have greater weights.
+         */
+        function getHeatmapData() {
+            var heatmapData = [];
+            var dataPoints = [];
+
+            let temp = [];
+            let temp1 = [];
+
+            loop1:
+            for (let i = 0; i < csvData.length - 1; i++) {
+                temp = [];
+                temp1 = [];
+                if (csvData[i][3].length > 0 && csvData[i][5].length > 0 && csvData[i][21].length > 0
+                && csvData[i][22].length > 0 && csvData[i][23].length > 0) {
+
+                    // loop2:
+                    // for (let j = 0; j < heatmapData.length; j++) {
+                    //     if (heatmapData[j][1].includes(csvData[i][22]) && heatmapData[j][2].includes(csvData[i][23])) {
+                    //         continue loop1;
+                    //     }
+                    // }
+
+                    temp1.push(csvData[i][3]);
+                    temp1.push(csvData[i][5]);
+                    temp.push(temp1);
                     temp.push(csvData[i][22]);
                     temp.push(csvData[i][23]);
                     heatmapData.push(temp);
                 }
             }
-
-            console.log(heatmapData);
 
             temp = [];
             for (let i = 0; i < heatmapData.length; i++) {
@@ -533,30 +541,18 @@ heatmap.set('maxIntensity', 10);
                 }
             }
 
-            console.log(heatmapData);
-
-            var temp2 = [3];
-            temp = [];
-            temp1 = [];
-            console.log(heatmapData.length);
             for (var i = 0; i < heatmapData.length; i++) {
-                dataPoints.push({location: new google.maps.LatLng(parseFloat(heatmapData[i][2]), parseFloat(heatmapData[i][3])), weight: (((1/500) * parseFloat(heatmapData[i][0])) + 1)});
+                dataPoints.push({
+                    location: new google.maps.LatLng(parseFloat(heatmapData[i][1]), parseFloat(heatmapData[i][2])),
+                    // the weight is based on the largest dispatch time (64 min), so the ranges of weights will be 1 - 5.
+                    weight: (((1/16) * parseFloat(heatmapData[i][0])) + 1)
+                });
             }
-
-
-console.log(dataPoints);
-
-
-            //console.log(dataPoints[4032].location.lat());
-            console.log(temp2)
-
             return (dataPoints);
-
-
         }
 
     </script>
-    <p id="footer">Created by Katherine Kolman</p>
+        <!-- <p id="footer">Created by Katherine Kolman</p> -->
 </body>
 
 
