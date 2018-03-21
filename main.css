@@ -1,36 +1,142 @@
 body {
-    /*background-color: tan;*/
-    background-image: url("https://cdn.pixabay.com/photo/2014/07/10/10/20/golden-gate-bridge-388917_960_720.jpg");
-    background-repeat: no-repeat;
+    /*background-color: #dedcdb;*/
+    background-color: #bce0df;/*#7ea89d;*/
+    font-family: "Montserrat", sans-serif;
 }
 
 h1 {
-    color: white;
+    font-family: "Montserrat", sans-serif;
+    cursor: default;
 }
 
-#page_title {
-    text-shadow: 1px 1px 2px black;
+button {
+    font-family: "Montserrat", sans-serif;
 }
 
-#content {
-    float: right;
-    padding-right: 300px;
+#tab_bar_1 {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: white;
+    width: 764px;
 }
+
+.tab_button {
+    background-color: inherit;
+    font-family: inherit;
+    float: left;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+    font-size: 20px;
+    padding: 18px 20px;
+}
+
+.tab_button:hover {
+    background-color: #ddd;
+}
+
+.tab_content {
+
+    background-color: white;
+    position: relative;
+    width: 800px;
+    height: 637px;
+}
+
+#checkbox_row_1 {
+    padding-left: 10px;
+    padding-top: 5px;
+    font-size: 20px;
+}
+
+#checkbox_row_1_text {
+    position: absolute;
+    top: 7px;
+    left: 60px;
+}
+
+#checkbox_row_1_text br {
+    line-height: 235%
+}
+
+#checkbox_row_2 {
+    position: absolute;
+    top: 5px;
+    left: 400px;
+    width: 400px;
+    font-size: 20px;
+}
+
+#checkbox_row_2_text {
+    position: absolute;
+    top: 7px;
+    left: 60px;
+}
+
+#checkbox_row_2_text br {
+    line-height: 235%;
+}
+
+label {
+    display: inline;
+}
+
+.checkbox {
+    display: none;
+}
+
+.checkbox + label {
+    background-color: #fafafa;
+	border: 1px solid #cacece;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+	padding: 20px;
+	border-radius: 3px;
+	display: inline-block;
+	position: relative;
+}
+
+.checkbox + label:active, .checkbox:checked + label:active {
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+
+.checkbox:checked + label {
+	background-color: #e9ecee;
+	border: 1px solid #adb8c0;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
+	color: #99a1a7;
+}
+
+.checkbox:checked + label:after {
+	content: '\2714';
+	font-size: 35px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	color: #99a1a7;
+}
+
 
 #footer {
     text-align: center;
 }
 
-#later {
-    background-image: url("https://cdn.pixabay.com/photo/2014/07/10/10/20/golden-gate-bridge-388917_960_720.jpg");
+#map {
+    height: 100%;
+    height: 700px;
+    width: 1000px;
+    float: right;
 }
 
-#geocoding_map {
-    height: 100%;
+#page_title {
+    text-align: center;
+    font-size: 55px;
 }
 
-#google_map {
-    height: 100%;
+#page_description {
+    text-align: center;
+    font-size: 20px;
 }
 
 img {

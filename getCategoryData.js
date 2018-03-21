@@ -184,7 +184,6 @@ function getCategoryData(csvData, type) {
             }
             break;
         case "water":
-            console.log(csvData.length);
             for (var i = 0; i < csvData.length; i++) {
                 if (csvData[i][0] == "Water Rescue") {
                     temp.push(csvData[i][22]); // latitude

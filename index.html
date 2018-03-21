@@ -11,85 +11,291 @@
  * comment code
  * give credit to outside resources (Chart.js, etc)
  * parseFloat instead of parseInt
+ * fix image locations
  -->
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>San Francisco Emergency Trends</title>
-    <!-- use later
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=font1|font2|etc" type="text/css"> -->
+
 
     <link rel="stylesheet" href="main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
     <script src="jquery.js"></script>
-    <script type="text/javascript" src="getCategoryData.js"></script>
     <script src="Chart.js"></script>
     <script src="markerclusterer.js"></script>
+    <script src="getCategoryData.js"></script>
     <script src="mostLikelyDispatch.js"></script>
+    <script src="sortByZipcode.js"></script>
 </head>
 
 <body>
     <div id="banner">
         <h1 id="page_title">San Francisco Emergency Response Statistics</h1>
-        <p>This webpage provides some trends found in data provided by<br /> the San Francisco Fire Department.</p>
+        <p id="page_description">This webpage provides some trends found in data provided by<br /> the San Francisco Fire Department.</p>
     </div>
+
+    <div id="tabset_1">
+        <!-- for the whole first tabbed section -->
+        <!--FIXME include charts and map!! -->
+        <div id="map"></div>
+        <div id="tab_bar_1">
+            <button class="tab_button" id="tab_1_button_1">Incident Locations</button>
+            <script>
+                document.getElementById("tab_1_button_1").addEventListener("click", showTab);
+            </script>
+            <button class="tab_button" id="tab1_button2">Emergency Prediction</button>
+            <button class="tab_button" id="tab1_button3">Average Dispatch Data</button>
+        </div>
+
+        <div class="tab_content" id="incident_locations">
+            <div id="checkbox_row_1">
+                <input type="checkbox" id="checkbox_1" class="checkbox"><label for="checkbox_1"></label><br />
+                <script>
+                    document.getElementById("checkbox_1").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_1").checked) {
+                            mapData("alarm", 0);
+                        } else {
+                            markerCluster[0].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_2" class="checkbox"><label for="checkbox_2"></label><br />
+                <script>
+                    document.getElementById("checkbox_2").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_2").checked) {
+                            mapData("citizen", 1);
+                        } else {
+                            markerCluster[1].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_3" class="checkbox"><label for="checkbox_3"></label><br />
+                <script>
+                    document.getElementById("checkbox_3").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_3").checked) {
+                            mapData("elehaz", 2);
+                        } else {
+                            markerCluster[2].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_4" class="checkbox"><label for="checkbox_4"></label><br />
+                <script>
+                    document.getElementById("checkbox_4").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_4").checked) {
+                            mapData("elerescue", 3);
+                        } else {
+                            markerCluster[3].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_5" class="checkbox"><label for="checkbox_5"></label><br />
+                <script>
+                    document.getElementById("checkbox_5").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_5").checked) {
+                            mapData("fuel", 4);
+                        } else {
+                            markerCluster[4].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_6" class="checkbox"><label for="checkbox_6"></label><br />
+                <script>
+                    document.getElementById("checkbox_6").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_6").checked) {
+                            mapData("gas", 5);
+                        } else {
+                            markerCluster[5].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_7" class="checkbox"><label for="checkbox_7"></label><br />
+                <script>
+                    document.getElementById("checkbox_7").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_7").checked) {
+                            mapData("hazmat", 6);
+                        } else {
+                            markerCluster[6].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_8" class="checkbox"><label for="checkbox_8"></label><br />
+                <script>
+                    document.getElementById("checkbox_8").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_8").checked) {
+                            mapData("medinc", 7);
+                        } else {
+                            markerCluster[7].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_9" class="checkbox"><label for="checkbox_9"></label><br />
+                <script>
+                    document.getElementById("checkbox_9").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_9").checked) {
+                            mapData("odor", 8);
+                        } else {
+                            markerCluster[8].clearMarkers();
+                        }
+                    });
+                </script>
+                <div id="checkbox_row_1_text">
+                    Alarm<br/> Citizen Assist / Service Call<br/> Electrical Hazard<br/> Elevator / Escalator Rescue <br/> Fuel Spill<br/> Gas Leak (Natural and LP Gases) <br /> HazMat
+                    <br/> Medical Incident<br /> Odor (Strange / Unknown)<br/>
+                </div>
+            </div>
+            <div id="checkbox_row_2">
+                <input type="checkbox" id="checkbox_10" class="checkbox"><label for="checkbox_10"></label><br />
+                <script>
+                    document.getElementById("checkbox_10").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_10").checked) {
+                            mapData("other", 9);
+                        } else {
+                            markerCluster[9].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_11" class="checkbox"><label for="checkbox_11"></label><br />
+                <script>
+                    document.getElementById("checkbox_11").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_11").checked) {
+                            mapData("outfire", 10);
+                        } else {
+                            markerCluster[10].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_12" class="checkbox"><label for="checkbox_12"></label><br />
+                <script>
+                    document.getElementById("checkbox_12").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_12").checked) {
+                            mapData("smoke", 11);
+                        } else {
+                            markerCluster[11].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_13" class="checkbox"><label for="checkbox_13"></label><br />
+                <script>
+                    document.getElementById("checkbox_13").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_13").checked) {
+                            mapData("structfire", 12);
+                        } else {
+                            markerCluster[12].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_14" class="checkbox"><label for="checkbox_14"></label><br />
+                <script>
+                    document.getElementById("checkbox_14").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_14").checked) {
+                            mapData("traffic", 13);
+                        } else {
+                            markerCluster[13].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_15" class="checkbox"><label for="checkbox_15"></label><br />
+                <script>
+                    document.getElementById("checkbox_15").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_15").checked) {
+                            mapData("train", 14);
+                        } else {
+                            markerCluster[14].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_16" class="checkbox"><label for="checkbox_16"></label><br />
+                <script>
+                    document.getElementById("checkbox_16").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_16").checked) {
+                            mapData("vehicle", 15);
+                        } else {
+                            markerCluster[15].clearMarkers();
+                        }
+                    });
+                </script>
+                <input type="checkbox" id="checkbox_17" class="checkbox"><label for="checkbox_17"></label><br />
+                <script>
+                    document.getElementById("checkbox_17").addEventListener("click", function() {
+                        if (document.getElementById("checkbox_17").checked) {
+                            mapData("water", 16);
+                        } else {
+                            markerCluster[16].clearMarkers();
+                        }
+                    });
+                </script>
+                <div id="checkbox_row_2_text">
+                    Other <br/> Outside Fire<br /> Smoke Investigation (Outside)<br/> Structure Fire<br /> Traffic Collision<br/> Train / Rail Incident<br /> Vehicle Fire<br/> Water Rescue<br />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
     <div id="content">
 
+        <canvas id="call_type_chart" width="100" height="50" style="display: block; width = 100px; height = 50px;"></canvas>
+        <canvas id="incident_time_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
+        <canvas id="resolution_time_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
+        <canvas id="avg_dispatch_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
+
+        <div id="most_likely_dispatch">
+            Address <input type="text" id="address_input"> Time: (Please use the format 00:00 AM) <input type="text" id="time_input">
+
+
+            <button id="get_dispatch_button">Click to get matching dispatch!</button>
+        </div>
+        <div id="call_type_data">
+            <button id="alarm_button">Alarm data</button>
+            <button id="citizen_button">citizen data</button>
+            <button id="ele_haz_button">ele haz data</button>
+            <button id="ele_rescue_button">ele rescue data</button>
+            <button id="fuel_button">fuel data</button>
+            <button id="gas_button">gas data</button>
+            <button id="hazmat_button">hazmat data</button>
+            <button id="med_inc_button">med_inc data</button>
+            <button id="odor_button">odor data</button>
+            <button id="other_button">other data</button>
+            <button id="out_fire_button">out_fire data</button>
+            <button id="smoke_button">smoke data</button>
+            <button id="struct_fire_button">struct fire data</button>
+            <button id="traffic_button">traffic data</button>
+            <button id="train_button">train data</button>
+            <button id="vehicle_button">vehicle data</button>
+            <button id="water_button">water data</button>
+            <button id="resolution_button">resolution</button>
+            <button id="avg_dispatch_button">dispatch</button>
+            <button id="heatmap_data">heatmap</button>
+            <button id="init_button">init</button>
+            <button id="dipatch">yeah</button>
+        </div>
     </div>
 
-
-    <div id="marker_map" style="width:400px;height:300px;"></div>
-    <div id="geocoding_map" style="width:400px;height:300px;"></div>
-    <div id="dispatch_time_heatmap" style="width:400px;height:300px;"></div>
-    <canvas id="call_type_chart" width="100" height="50" style="display: block; width = 100px; height = 50px;"></canvas>
-    <canvas id="incident_time_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
-    <canvas id="resolution_time_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
-
-
-
-
-    <div id="most_likely_dispatch">
-        Address <input type="text" id="address_input"> Time: (Please use the format 00:00 AM) <input type="text" id="time_input">
-
-
-        <button id="get_dispatch_button">Click to get matching dispatch!</button>
-    </div>
-    <div id="call_type_data">
-        <button id="alarm_button">Alarm data</button>
-        <button id="citizen_button">citizen data</button>
-        <button id="ele_haz_button">ele haz data</button>
-        <button id="ele_rescue_button">ele rescue data</button>
-        <button id="fuel_button">fuel data</button>
-        <button id="gas_button">gas data</button>
-        <button id="hazmat_button">hazmat data</button>
-        <button id="med_inc_button">med_inc data</button>
-        <button id="odor_button">odor data</button>
-        <button id="other_button">other data</button>
-        <button id="out_fire_button">out_fire data</button>
-        <button id="smoke_button">smoke data</button>
-        <button id="struct_fire_button">struct fire data</button>
-        <button id="traffic_button">traffic data</button>
-        <button id="train_button">train data</button>
-        <button id="vehicle_button">vehicle data</button>
-        <button id="water_button">water data</button>
-        <button id="resolution_button">resolution</button>
-        <button id="avg_dispatch_button">dispatch</button>
-        <button id="heatmap_data">heatmap</button>
-        <button id="init_button">init</button>
-    </div>
-
+    <p id="footer">Created by Katherine Kolman</p>
     <img src="./images/SF-skyline.png"></src>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&libraries=visualization"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&libraries=visualization&callback=initialize"></script>
 
     <script>
         document.getElementById("get_dispatch_button").addEventListener("click", findAddress);
+        document.getElementById("dipatch").addEventListener("click", function() {
+            updateChart(avgDispatchChart, getAvgDispatchTime());
+        });
 
         //FIXME reformat this
-
-        document.getElementById("init_button").addEventListener("click", initialize);
-        document.getElementById("heatmap_data").addEventListener("click", getHeatmapData);
         document.getElementById("resolution_button").addEventListener("click", function() {
             updateChart(resolutionTimeChart, getResolutionTime());
         });
@@ -165,16 +371,16 @@
             updateChart(incidentTimeChart, getIncidentTimeData("water"));
         })
 
-    //    $(document).ready(function() {
-            $.ajax({
-                type: "GET",
-                url: "sfpd_data.csv",
-                dataType: "text",
-                success: function(data) {
-                    parseCSV(data);
-                }
-            });
-    //    });
+        //    $(document).ready(function() {
+        $.ajax({
+            type: "GET",
+            url: "sfpd_data.csv",
+            dataType: "text",
+            success: function(data) {
+                parseCSV(data);
+            }
+        });
+        //    });
 
         /* This function goes through the data from the given CSV file
          *  and puts it in a multidimensional array.
@@ -205,7 +411,7 @@
         var geocodeMap;
         var dispatchTimeHeatmap;
         var heatmap;
-        var markerCluster;
+        var markerCluster = [];
         var locations = [];
         var markers = [];
 
@@ -216,64 +422,43 @@
             geocoder = new google.maps.Geocoder();
             var options = {
                 center: new google.maps.LatLng(37.7749, -122.4194),
-                zoom: 11,
+                zoom: 12,
                 mapTypeId: google.maps.MapTypeId.ROADMAP // change the style and colors of map to fit theme of site
             };
-            geocodeMap = new google.maps.Map(document.getElementById("geocoding_map"), options);
-            markerMap = new google.maps.Map(document.getElementById("marker_map"), options);
-            dispatchTimeHeatmap = new google.maps.Map(document.getElementById("dispatch_time_heatmap"), options);
+            //    geocodeMap = new google.maps.Map(document.getElementById("map"), options);
+            markerMap = new google.maps.Map(document.getElementById("map"), options);
+            //    dispatchTimeHeatmap = new google.maps.Map(document.getElementById("map"), options);
 
-            var heatData = getHeatmapData();
+            //    var heatData = getHeatmapData();
 
+            // heatmap = new google.maps.visualization.HeatmapLayer();
+            //
+            //
+            // heatmap.set('opacity', .3);
+            // heatmap.set('dissipating', true);
+            // heatmap.set('maxIntensity', 10);
+            //
+            // heatmap.setData(heatData);
+            // heatmap.setMap(dispatchTimeHeatmap);
+            // //console.log(heatmap.getData());
 
-
-            console.log(heatData);
-
-            var gradient = [
-         'rgba(0, 255, 255, 0)',
-         'rgba(0, 255, 255, 1)',
-         'rgba(0, 191, 255, 1)',
-         'rgba(0, 127, 255, 1)',
-         'rgba(0, 63, 255, 1)',
-         'rgba(0, 0, 255, 1)',
-         'rgba(0, 0, 223, 1)',
-         'rgba(0, 0, 191, 1)',
-         'rgba(0, 0, 159, 1)',
-         'rgba(0, 0, 127, 1)',
-         'rgba(63, 0, 91, 1)',
-         'rgba(127, 0, 63, 1)',
-         'rgba(191, 0, 31, 1)',
-         'rgba(255, 0, 0, 1)'
-     ];
-
-            heatmap = new google.maps.visualization.HeatmapLayer(
-            );
-
-
-heatmap.set('opacity', .3);
-heatmap.set('dissipating', true);
-heatmap.set('maxIntensity', 10);
-
-            heatmap.setData(heatData);
-            heatmap.setMap(dispatchTimeHeatmap);
-            //console.log(heatmap.getData());
-
-            markerCluster = new MarkerClusterer(markerMap, markers, {
-                imagePath: "./images/m"
-            });
+            for (var i = 0; i < 18; i++) {
+                markerCluster[i] = new MarkerClusterer(markerMap, markers, {
+                    imagePath: "./images/m"
+                });
+            }
         }
 
         /* This function places markers at the location of the incidents
          * on a map.
          */
-        function mapData(type) {
+        function mapData(type, index) {
             locations = [];
             markers = [];
             data = [];
-            markerCluster.clearMarkers();
+            markerCluster[index].clearMarkers();
 
             data = getCategoryData(csvData, type);
-            console.log(data);
 
             for (var i = 0; i < data.length; i++) {
                 locations.push(new google.maps.LatLng(data[i][0], data[i][1]));
@@ -285,7 +470,7 @@ heatmap.set('maxIntensity', 10);
                 });
             });
 
-            markerCluster = new MarkerClusterer(markerMap, markers, {
+            markerCluster[index] = new MarkerClusterer(markerMap, markers, {
                 imagePath: "./images/m"
             });
         }
@@ -354,6 +539,20 @@ heatmap.set('maxIntensity', 10);
                 ]
             }
         });
+
+        var avgDispatchChart = new Chart(document.getElementById("avg_dispatch_chart"), {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    label: "Average Dispatch Time"
+                }],
+                labels: ['94102', '94103', '94104', '94105', '94107', '94108', '94109', '94110', '94111', '94112', '94114',
+                    '94115', '94116', '94117', '94118', '94121', '94123', '94124', '94127', '94129', '94130', '94131',
+                    '94132', '94133', '94134', '94158'
+                ]
+            }
+        })
 
         /* This function gets the number of occurences of a incident type and sorts it
          * by time of day within hour long intervals starting at the half-hour mark (for
@@ -478,21 +677,44 @@ heatmap.set('maxIntensity', 10);
         }
 
         function getAvgDispatchTime() {
+            avgDispatch = [];
+
             let temp = [];
             let temp1 = [];
             for (let i = 0; i < csvData.length - 1; i++) {
                 temp = [];
                 temp1 = [];
-                if (csvData[i][3].length > 0 && csvData[i][5].length > 0 && csvData[i][21].length > 0
-                && csvData[i][22].length > 0 && csvData[i][23].length > 0) {
+                if (csvData[i][3].length > 0 && csvData[i][5].length > 0 && csvData[i][21].length > 0 &&
+                    csvData[i][22].length > 0 && csvData[i][23].length > 0) {
                     temp1.push(csvData[i][3]);
                     temp1.push(csvData[i][5]);
                     temp.push(temp1);
-                    temp.push(csvData[i][21]);
-                    heatmapData.push(temp);
+                    temp.push(csvData[i][9]); // zipcodes
+                    avgDispatch.push(temp);
                 }
             }
+
+            temp = [];
+            for (let i = 0; i < avgDispatch.length; i++) {
+                temp.push(calcTimeDiff(avgDispatch[i][0]));
+                if (temp[0] > 500) {
+                    avgDispatch[i][0] = 0;
+                    temp = [];
+                    continue;
+                } else {
+                    avgDispatch[i][0] = temp[0];
+                    temp = [];
+                }
+            }
+
+            avgDispatch = sortByZipcode(avgDispatch);
+
+            console.log(avgDispatch);
+
+            return avgDispatch;
         }
+
+
 
         /* This function returns all of the locations of all incidents and weights them according to
          * their dispatch time. Longer dispatch times will have greater weights.
@@ -505,27 +727,27 @@ heatmap.set('maxIntensity', 10);
             let temp1 = [];
 
             loop1:
-            for (let i = 0; i < csvData.length - 1; i++) {
-                temp = [];
-                temp1 = [];
-                if (csvData[i][3].length > 0 && csvData[i][5].length > 0 && csvData[i][21].length > 0
-                && csvData[i][22].length > 0 && csvData[i][23].length > 0) {
+                for (let i = 0; i < csvData.length - 1; i++) {
+                    temp = [];
+                    temp1 = [];
+                    if (csvData[i][3].length > 0 && csvData[i][5].length > 0 && csvData[i][21].length > 0 &&
+                        csvData[i][22].length > 0 && csvData[i][23].length > 0) {
 
-                    // loop2:
-                    // for (let j = 0; j < heatmapData.length; j++) {
-                    //     if (heatmapData[j][1].includes(csvData[i][22]) && heatmapData[j][2].includes(csvData[i][23])) {
-                    //         continue loop1;
-                    //     }
-                    // }
+                        // loop2:
+                        // for (let j = 0; j < heatmapData.length; j++) {
+                        //     if (heatmapData[j][1].includes(csvData[i][22]) && heatmapData[j][2].includes(csvData[i][23])) {
+                        //         continue loop1;
+                        //     }
+                        // }
 
-                    temp1.push(csvData[i][3]);
-                    temp1.push(csvData[i][5]);
-                    temp.push(temp1);
-                    temp.push(csvData[i][22]);
-                    temp.push(csvData[i][23]);
-                    heatmapData.push(temp);
+                        temp1.push(csvData[i][3]);
+                        temp1.push(csvData[i][5]);
+                        temp.push(temp1);
+                        temp.push(csvData[i][22]);
+                        temp.push(csvData[i][23]);
+                        heatmapData.push(temp);
+                    }
                 }
-            }
 
             temp = [];
             for (let i = 0; i < heatmapData.length; i++) {
@@ -534,8 +756,7 @@ heatmap.set('maxIntensity', 10);
                     heatmapData[i][0] = 0;
                     temp = [];
                     continue;
-                }
-                else {
+                } else {
                     heatmapData[i][0] = temp[0];
                     temp = [];
                 }
@@ -545,15 +766,12 @@ heatmap.set('maxIntensity', 10);
                 dataPoints.push({
                     location: new google.maps.LatLng(parseFloat(heatmapData[i][1]), parseFloat(heatmapData[i][2])),
                     // the weight is based on the largest dispatch time (64 min), so the ranges of weights will be 1 - 5.
-                    weight: (((1/16) * parseFloat(heatmapData[i][0])) + 1)
+                    weight: (((1 / 16) * parseFloat(heatmapData[i][0])) + 1)
                 });
             }
             return (dataPoints);
         }
-
     </script>
-        <!-- <p id="footer">Created by Katherine Kolman</p> -->
 </body>
-
 
 </html>
