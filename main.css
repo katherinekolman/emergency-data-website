@@ -1,81 +1,200 @@
 body {
     /*background-color: #dedcdb;*/
-    background-color: #bce0df;/*#7ea89d;*/
+    background: linear-gradient(#bce0df, #4A8DC1); /*#7ea89d;*/
     font-family: "Montserrat", sans-serif;
+    height: 100%;
+    cursor: default;
+}
+
+#container {
+    min-height: 100%;
+    position: relative;
 }
 
 h1 {
     font-family: "Montserrat", sans-serif;
     cursor: default;
+    padding-top: 30px;
+    font-weight: 100;
 }
 
 button {
     font-family: "Montserrat", sans-serif;
 }
 
-#tab_bar_1 {
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0px;
+    text-align: center;
+}
+
+li {
+    display: inline;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+li:hover {
+    cursor: pointer;
+    color: #666666;
+    transition: 0.1s;
+}
+
+#nav_bar {
+    font-size: 30px;
+    background-color: white;
+    position:sticky;
+    top: -2px;
+    z-index: 1000;
+    padding-top: 20px;
+    padding-bottom: 25px;
+}
+
+#bottom_image {
+    position: relative;
+    bottom: 0;
+    left:0%;
+    /*margin-left: -10px;
+    margin-bottom: -9px;
+    margin-right: -8px;
+    margin-top: -15px;*/
+
+    margin: -15px -8px -9px -10px;
+    overflow: hidden;
+}
+
+
+#background_border {
+    margin: 75px 70px 10px 70px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.tabs {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: white;
-    width: 764px;
+}
+
+#tab_bar_1 {
+    position: relative;
+    width: 398px;
+    left: 23px;
+    top: -17px;
 }
 
 .tab_button {
     background-color: inherit;
     font-family: inherit;
-    float: left;
     border: none;
     cursor: pointer;
     transition: 0.3s;
     font-family: inherit;
-    font-size: 20px;
-    padding: 18px 20px;
+    font-size: 16px;
+    padding: 10px 16px;
+    z-index: 999;
+    display: inline-block;
+    outline: none;
 }
 
 .tab_button:hover {
-    background-color: #ddd;
+    background-color: #ccc;
+}
+
+.tab_button.active {
+    border-bottom: 1px solid white;
 }
 
 .tab_content {
-
+    display: none;
     background-color: white;
-    position: relative;
-    width: 800px;
-    height: 637px;
+    position: absolute;
+    width: 1402px;
+    height: 175px;
+    top: 927px;
+    left: 205px;
+    margin: auto;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+#incident_locations {
+
+}
+
+#emergency_prediction button {
+    border: 1px solid black;
+    overflow: hidden;
+    background-color: #ccc;
+}
+
+#prediction_description {
+    line-height: normal;
+}
+
+#most_likely_dispatch {
+
 }
 
 #checkbox_row_1 {
-    padding-left: 10px;
-    padding-top: 5px;
-    font-size: 20px;
-}
-
-#checkbox_row_1_text {
     position: absolute;
-    top: 7px;
-    left: 60px;
+    left: 10px;
+    top: 10px;
+    line-height: 185%;
 }
 
-#checkbox_row_1_text br {
-    line-height: 235%
+#checkbox_row_1_label {
+    position: absolute;
+    top: 8px;
+    left: 40px;
+    font-size: 15px;
+    line-height: 220%;
 }
 
 #checkbox_row_2 {
     position: absolute;
-    top: 5px;
-    left: 400px;
-    width: 400px;
-    font-size: 20px;
+    left: 275px;
+    top: 10px;
+    line-height: 185%;
 }
 
-#checkbox_row_2_text {
+#checkbox_row_2_label {
     position: absolute;
-    top: 7px;
-    left: 60px;
+    top: 8px;
+    left: 308px;
+    font-size: 15px;
+    line-height: 220%;
 }
 
-#checkbox_row_2_text br {
-    line-height: 235%;
+#checkbox_row_3 {
+    position: absolute;
+    left: 600px;
+    top: 10px;
+    line-height: 185%;
+}
+
+#checkbox_row_3_label {
+    position: absolute;
+    top: 8px;
+    left: 630px;
+    font-size: 15px;
+    line-height: 220%;
+}
+
+#checkbox_row_4 {
+    position: absolute;
+    left: 925px;
+    top: 10px;
+    line-height: 185%;
+}
+
+#checkbox_row_4_label {
+    position: absolute;
+    top: 8px;
+    left: 955px;
+    font-size: 15px;
+    line-height: 220%;
 }
 
 label {
@@ -90,7 +209,7 @@ label {
     background-color: #fafafa;
 	border: 1px solid #cacece;
 	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
-	padding: 20px;
+	padding: 11px;
 	border-radius: 3px;
 	display: inline-block;
 	position: relative;
@@ -110,10 +229,10 @@ label {
 
 .checkbox:checked + label:after {
 	content: '\2714';
-	font-size: 35px;
+	font-size: 23px;
 	position: absolute;
-	top: 0px;
-	left: 0px;
+    top: -2px;
+	left: 2px;
 	color: #99a1a7;
 }
 
@@ -123,15 +242,26 @@ label {
 }
 
 #map {
+    position: relative;
+    top: 25px;
     height: 100%;
-    height: 700px;
-    width: 1000px;
-    float: right;
+    height: 600px;
+    width: 1400px;
+    margin: auto;
+    border: 2px solid #CCCCCC;
+}
+
+#map_border {
+    background-color: #EEEEEE;
+    margin: auto;
+    height: 828px;
+    width: 1450px;
+    border: 2px solid #DDDDDD;
 }
 
 #page_title {
     text-align: center;
-    font-size: 55px;
+    font-size: 50px;
 }
 
 #page_description {

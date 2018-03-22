@@ -32,260 +32,329 @@
 </head>
 
 <body>
-    <div id="banner">
-        <h1 id="page_title">San Francisco Emergency Response Statistics</h1>
-        <p id="page_description">This webpage provides some trends found in data provided by<br /> the San Francisco Fire Department.</p>
-    </div>
+    <div id="container">
+        <div id="background_border">
+            <div id="banner">
+                <h1 id="page_title">San Francisco Emergency Response Statistics</h1>
+            </div>
 
-    <div id="tabset_1">
-        <!-- for the whole first tabbed section -->
-        <!--FIXME include charts and map!! -->
-        <div id="map"></div>
-        <div id="tab_bar_1">
-            <button class="tab_button" id="tab_1_button_1">Incident Locations</button>
+
+
+
+            <div id="nav_bar">
+                <ul>
+                    <li id="incident_info">Incident Information</li>
+                    <li id="interesting_metrics">Interesting Metrics</li>
+                    <li id="avg_dispatch_data">Average Dispatch Data</li>
+                </ul>
+            </div>
             <script>
-                document.getElementById("tab_1_button_1").addEventListener("click", showTab);
+                $("#incident_info").click(function() {
+                    $('html, body').animate({
+                        scrollTop: $("#incident_time_chart").offset().top
+                    }, 1500);
+                });
             </script>
-            <button class="tab_button" id="tab1_button2">Emergency Prediction</button>
-            <button class="tab_button" id="tab1_button3">Average Dispatch Data</button>
-        </div>
 
-        <div class="tab_content" id="incident_locations">
-            <div id="checkbox_row_1">
-                <input type="checkbox" id="checkbox_1" class="checkbox"><label for="checkbox_1"></label><br />
-                <script>
-                    document.getElementById("checkbox_1").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_1").checked) {
-                            mapData("alarm", 0);
-                        } else {
-                            markerCluster[0].clearMarkers();
+            <p id="page_description">This webpage provides some trends found in data provided by<br /> the San Francisco Fire Department.</p>
+
+            <div id="tabset_1">
+                <!-- for the whole first tabbed section -->
+                <!--FIXME include charts -->
+                <div id="map_border">
+                    <div id="map"></div>
+
+                    <script>
+                    function showTab(e, element) {
+                        var tab_content = document.getElementsByClassName("tab_content");
+
+                        for (let i = 0; i < tab_content.length; i++) {
+                            tab_content[i].style.display = "none";
                         }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_2" class="checkbox"><label for="checkbox_2"></label><br />
-                <script>
-                    document.getElementById("checkbox_2").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_2").checked) {
-                            mapData("citizen", 1);
-                        } else {
-                            markerCluster[1].clearMarkers();
+
+                        var tab_buttons = document.getElementsByClassName("tab_button");
+                        for (let i = 0; i < tab_buttons.length; i++) {
+                            tab_buttons[i].className = tab_buttons[i].className.replace(" active", "");
                         }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_3" class="checkbox"><label for="checkbox_3"></label><br />
-                <script>
-                    document.getElementById("checkbox_3").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_3").checked) {
-                            mapData("elehaz", 2);
-                        } else {
-                            markerCluster[2].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_4" class="checkbox"><label for="checkbox_4"></label><br />
-                <script>
-                    document.getElementById("checkbox_4").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_4").checked) {
-                            mapData("elerescue", 3);
-                        } else {
-                            markerCluster[3].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_5" class="checkbox"><label for="checkbox_5"></label><br />
-                <script>
-                    document.getElementById("checkbox_5").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_5").checked) {
-                            mapData("fuel", 4);
-                        } else {
-                            markerCluster[4].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_6" class="checkbox"><label for="checkbox_6"></label><br />
-                <script>
-                    document.getElementById("checkbox_6").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_6").checked) {
-                            mapData("gas", 5);
-                        } else {
-                            markerCluster[5].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_7" class="checkbox"><label for="checkbox_7"></label><br />
-                <script>
-                    document.getElementById("checkbox_7").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_7").checked) {
-                            mapData("hazmat", 6);
-                        } else {
-                            markerCluster[6].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_8" class="checkbox"><label for="checkbox_8"></label><br />
-                <script>
-                    document.getElementById("checkbox_8").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_8").checked) {
-                            mapData("medinc", 7);
-                        } else {
-                            markerCluster[7].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_9" class="checkbox"><label for="checkbox_9"></label><br />
-                <script>
-                    document.getElementById("checkbox_9").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_9").checked) {
-                            mapData("odor", 8);
-                        } else {
-                            markerCluster[8].clearMarkers();
-                        }
-                    });
-                </script>
-                <div id="checkbox_row_1_text">
-                    Alarm<br/> Citizen Assist / Service Call<br/> Electrical Hazard<br/> Elevator / Escalator Rescue <br/> Fuel Spill<br/> Gas Leak (Natural and LP Gases) <br /> HazMat
-                    <br/> Medical Incident<br /> Odor (Strange / Unknown)<br/>
+
+                        document.getElementById(element).style.display = "block";
+                        e.currentTarget.className += " active";
+
+                    }
+                    </script>
+
+
+                    <div class="tabs" id="tab_bar_1">
+                        <button class="tab_button" id="tab_1_button_1">Incident Locations</button>
+                        <script>document.getElementById("tab_1_button_1").addEventListener("click", function(event){showTab(event, "incident_locations")});</script>
+                        <button class="tab_button" id="tab_1_button_2">Emergency Prediction</button>
+                        <script>document.getElementById("tab_1_button_2").addEventListener("click", function(event){showTab(event, "emergency_prediction")});</script>
+                    </div>
+
+
+
+                    <div class="tab_content" id="incident_locations">
+
+
+                        <script>
+                            // This function toggles the markers on the map.
+                            function showMarkers(type, index, id) {
+                                if (document.getElementById(id).checked) {
+                                    mapData(type, index);
+                                } else {
+                                    markerCluster[index].clearMarkers();
+                                }
+
+                            }
+                        </script>
+
+                        <!-- Checkboxes for the left side of the panel -->
+                        <div id="checkbox_row_1">
+
+                            <input type="checkbox" id="checkbox_1" class="checkbox" autocomplete="off"><label for="checkbox_1"></label>
+                            <script>
+                                document.getElementById("checkbox_1").addEventListener("click", function() {
+                                    showMarkers("alarm", 0, "checkbox_1");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_2" class="checkbox" autocomplete="off"><label for="checkbox_2"></label>
+                            <script>
+                                document.getElementById("checkbox_2").addEventListener("click", function() {
+                                    showMarkers("citizen", 1, "checkbox_2");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_3" class="checkbox" autocomplete="off"><label for="checkbox_3"></label>
+                            <script>
+                                document.getElementById("checkbox_3").addEventListener("click", function() {
+                                    showMarkers("elehaz", 2, "checkbox_3");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_4" class="checkbox" autocomplete="off"><label for="checkbox_4"></label>
+                            <script>
+                                document.getElementById("checkbox_4").addEventListener("click", function() {
+                                    showMarkers("elerescue", 3, "checkbox_4");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_5" class="checkbox" autocomplete="off"><label for="checkbox_5"></label>
+                            <script>
+                                document.getElementById("checkbox_5").addEventListener("click", function() {
+                                    showMarkers("fuel", 4, "checkbox_5");
+                                });
+                            </script>
+
+                        </div>
+
+                        <div id="checkbox_row_1_label">
+                            <span>Alarm</span><br />
+                            <span>Citizen Assist / Service Call</span><br />
+                            <span>Electrical Hazard</span><br />
+                            <span>Elevator Rescue</span><br />
+                            <span>Fuel Spill</span><br />
+                        </div>
+
+                        <div id="checkbox_row_2">
+
+                            <input type="checkbox" id="checkbox_6" class="checkbox" autocomplete="off"><label for="checkbox_6"></label>
+                            <script>
+                                document.getElementById("checkbox_6").addEventListener("click", function() {
+                                    showMarkers("gas", 5, "checkbox_6");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_7" class="checkbox" autocomplete="off"><label for="checkbox_7"></label>
+                            <script>
+                                document.getElementById("checkbox_7").addEventListener("click", function() {
+                                    showMarkers("hazmat", 6, "checkbox_7");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_8" class="checkbox" autocomplete="off"><label for="checkbox_8"></label>
+                            <script>
+                                document.getElementById("checkbox_8").addEventListener("click", function() {
+                                    showMarkers("medinc", 7, "checkbox_8");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_9" class="checkbox" autocomplete="off"><label for="checkbox_9"></label>
+                            <script>
+                                document.getElementById("checkbox_9").addEventListener("click", function() {
+                                    showMarkers("odor", 8, "checkbox_9");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_10" class="checkbox" autocomplete="off"><label for="checkbox_10"></label><br />
+                            <script>
+                                document.getElementById("checkbox_10").addEventListener("click", function() {
+                                    showMarkers("other", 9, "checkbox_10");
+                                });
+                            </script>
+                        </div>
+
+                        <div id="checkbox_row_2_label">
+                            <span>Gas Leak (Natural and LP Gases)</span><br />
+                            <span>HazMat</span><br />
+                            <span>Medical Incident</span><br />
+                            <span>Odor (Strange / Unknown)</span><br />
+                            <span>Other</span><br />
+                        </div>
+
+                        <div id="checkbox_row_3">
+                            <input type="checkbox" id="checkbox_11" class="checkbox" autocomplete="off"><label for="checkbox_11"></label>
+                            <script>
+                                document.getElementById("checkbox_11").addEventListener("click", function() {
+                                    showMarkers("outfire", 10, "checkbox_11");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_12" class="checkbox" autocomplete="off"><label for="checkbox_12"></label>
+                            <script>
+                                document.getElementById("checkbox_12").addEventListener("click", function() {
+                                    showMarkers("smoke", 11, "checkbox_12");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_13" class="checkbox" autocomplete="off"><label for="checkbox_13"></label>
+                            <script>
+                                document.getElementById("checkbox_13").addEventListener("click", function() {
+                                    showMarkers("structfire", 12, "checkbox_13");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_14" class="checkbox" autocomplete="off"><label for="checkbox_14"></label>
+                            <script>
+                                document.getElementById("checkbox_14").addEventListener("click", function() {
+                                    showMarkers("traffic", 13, "checkbox_14");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_15" class="checkbox" autocomplete="off"><label for="checkbox_15"></label>
+                            <script>
+                                document.getElementById("checkbox_15").addEventListener("click", function() {
+                                    showMarkers("train", 14, "checkbox_15");
+                                });
+                            </script>
+                        </div>
+
+                        <div id="checkbox_row_3_label">
+                            <span>Outside Fire</span><br />
+                            <span>Smoke Investigation (Outside)</span><br />
+                            <span>Structure Fire</span><br />
+                            <span>Traffic Collision</span><br />
+                            <span>Train / Rail Incident</span><br />
+                        </div>
+
+                        <div id="checkbox_row_4">
+                            <input type="checkbox" id="checkbox_16" class="checkbox" autocomplete="off"><label for="checkbox_16"></label>
+                            <script>
+                                document.getElementById("checkbox_16").addEventListener("click", function() {
+                                    showMarkers("vehicle", 15, "checkbox_16");
+                                });
+                            </script>
+                            <br />
+
+                            <input type="checkbox" id="checkbox_17" class="checkbox" autocomplete="off"><label for="checkbox_17"></label>
+                            <script>
+                                document.getElementById("checkbox_17").addEventListener("click", function() {
+                                    showMarkers("water", 16, "checkbox_17");
+                                });
+                            </script>
+                        </div>
+
+                        <div id="checkbox_row_4_label">
+                            <span>Vehicle Fire</span><br />
+                            <span>Water Rescue</span><br />
+                        </div>
+                    </div>
+
+                    <div class="tab_content" id="emergency_prediction">
+                        <div id="prediction_description">
+                        <p>Given a time and address, this predicts the most likely emergency that had occurred.
+                            <br />This also gives the dispatch most sent to that area during that time.</p>
+                        </div>
+
+                            <div id="most_likely_dispatch">
+                                Address <input type="text" id="address_input"> <br />
+                                Time: (Please use the format 00:00 AM) <input type="text" id="time_input"> <br />
+                                <button id="get_dispatch_button">Predict Dispatch and Emergency</button>
+                                <script></script>
+                            </div>
+
+                    </div>
+
+
                 </div>
             </div>
-            <div id="checkbox_row_2">
-                <input type="checkbox" id="checkbox_10" class="checkbox"><label for="checkbox_10"></label><br />
-                <script>
-                    document.getElementById("checkbox_10").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_10").checked) {
-                            mapData("other", 9);
-                        } else {
-                            markerCluster[9].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_11" class="checkbox"><label for="checkbox_11"></label><br />
-                <script>
-                    document.getElementById("checkbox_11").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_11").checked) {
-                            mapData("outfire", 10);
-                        } else {
-                            markerCluster[10].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_12" class="checkbox"><label for="checkbox_12"></label><br />
-                <script>
-                    document.getElementById("checkbox_12").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_12").checked) {
-                            mapData("smoke", 11);
-                        } else {
-                            markerCluster[11].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_13" class="checkbox"><label for="checkbox_13"></label><br />
-                <script>
-                    document.getElementById("checkbox_13").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_13").checked) {
-                            mapData("structfire", 12);
-                        } else {
-                            markerCluster[12].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_14" class="checkbox"><label for="checkbox_14"></label><br />
-                <script>
-                    document.getElementById("checkbox_14").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_14").checked) {
-                            mapData("traffic", 13);
-                        } else {
-                            markerCluster[13].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_15" class="checkbox"><label for="checkbox_15"></label><br />
-                <script>
-                    document.getElementById("checkbox_15").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_15").checked) {
-                            mapData("train", 14);
-                        } else {
-                            markerCluster[14].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_16" class="checkbox"><label for="checkbox_16"></label><br />
-                <script>
-                    document.getElementById("checkbox_16").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_16").checked) {
-                            mapData("vehicle", 15);
-                        } else {
-                            markerCluster[15].clearMarkers();
-                        }
-                    });
-                </script>
-                <input type="checkbox" id="checkbox_17" class="checkbox"><label for="checkbox_17"></label><br />
-                <script>
-                    document.getElementById("checkbox_17").addEventListener("click", function() {
-                        if (document.getElementById("checkbox_17").checked) {
-                            mapData("water", 16);
-                        } else {
-                            markerCluster[16].clearMarkers();
-                        }
-                    });
-                </script>
-                <div id="checkbox_row_2_text">
-                    Other <br/> Outside Fire<br /> Smoke Investigation (Outside)<br/> Structure Fire<br /> Traffic Collision<br/> Train / Rail Incident<br /> Vehicle Fire<br/> Water Rescue<br />
+
+
+
+
+
+
+
+
+
+
+            <div id="content">
+
+                <canvas id="call_type_chart" width="400" height="250" style="display: block; width = 100px; height = 50px;"></canvas>
+                <canvas id="incident_time_chart" width="400" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
+                <canvas id="resolution_time_chart" width="400" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
+                <canvas id="avg_dispatch_chart" width="400" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
+
+
+                <div id="call_type_data">
+                    <button id="alarm_button">Alarm data</button>
+                    <button id="citizen_button">citizen data</button>
+                    <button id="ele_haz_button">ele haz data</button>
+                    <button id="ele_rescue_button">ele rescue data</button>
+                    <button id="fuel_button">fuel data</button>
+                    <button id="gas_button">gas data</button>
+                    <button id="hazmat_button">hazmat data</button>
+                    <button id="med_inc_button">med_inc data</button>
+                    <button id="odor_button">odor data</button>
+                    <button id="other_button">other data</button>
+                    <button id="out_fire_button">out_fire data</button>
+                    <button id="smoke_button">smoke data</button>
+                    <button id="struct_fire_button">struct fire data</button>
+                    <button id="traffic_button">traffic data</button>
+                    <button id="train_button">train data</button>
+                    <button id="vehicle_button">vehicle data</button>
+                    <button id="water_button">water data</button>
+                    <button id="resolution_button">resolution</button>
+                    <button id="avg_dispatch_button">dispatch</button>
+                    <button id="heatmap_data">heatmap</button>
+                    <button id="init_button">init</button>
+                    <button id="dipatch">yeah</button>
                 </div>
             </div>
-        </div>
+            <p id="footer">Created by Katherine Kolman</p>
 
+        </div>
+        <div id="bottom_image">
+            <img src="images/goldengatebridge2.jpg" />
+        </div>
     </div>
 
 
 
+    <!-- FIXME add a banner at bottom, link github page -->
 
-
-
-
-
-
-
-    <div id="content">
-
-        <canvas id="call_type_chart" width="100" height="50" style="display: block; width = 100px; height = 50px;"></canvas>
-        <canvas id="incident_time_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
-        <canvas id="resolution_time_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
-        <canvas id="avg_dispatch_chart" width="700" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
-
-        <div id="most_likely_dispatch">
-            Address <input type="text" id="address_input"> Time: (Please use the format 00:00 AM) <input type="text" id="time_input">
-
-
-            <button id="get_dispatch_button">Click to get matching dispatch!</button>
-        </div>
-        <div id="call_type_data">
-            <button id="alarm_button">Alarm data</button>
-            <button id="citizen_button">citizen data</button>
-            <button id="ele_haz_button">ele haz data</button>
-            <button id="ele_rescue_button">ele rescue data</button>
-            <button id="fuel_button">fuel data</button>
-            <button id="gas_button">gas data</button>
-            <button id="hazmat_button">hazmat data</button>
-            <button id="med_inc_button">med_inc data</button>
-            <button id="odor_button">odor data</button>
-            <button id="other_button">other data</button>
-            <button id="out_fire_button">out_fire data</button>
-            <button id="smoke_button">smoke data</button>
-            <button id="struct_fire_button">struct fire data</button>
-            <button id="traffic_button">traffic data</button>
-            <button id="train_button">train data</button>
-            <button id="vehicle_button">vehicle data</button>
-            <button id="water_button">water data</button>
-            <button id="resolution_button">resolution</button>
-            <button id="avg_dispatch_button">dispatch</button>
-            <button id="heatmap_data">heatmap</button>
-            <button id="init_button">init</button>
-            <button id="dipatch">yeah</button>
-        </div>
-    </div>
-
-    <p id="footer">Created by Katherine Kolman</p>
-    <img src="./images/SF-skyline.png"></src>
 
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&libraries=visualization&callback=initialize"></script>
 
@@ -494,6 +563,9 @@
                     'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
                     'Vehicle Fire', 'Water Rescue'
                 ]
+            },
+            options: {
+                responsive: false
             }
         });
 
@@ -511,6 +583,7 @@
                 ]
             },
             options: {
+                responsive: false,
                 scaleShowValues: true,
                 scales: {
                     yAxes: [{
@@ -537,6 +610,9 @@
                 labels: ['12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM',
                     '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'
                 ]
+            },
+            options: {
+                responsive: false
             }
         });
 
@@ -551,6 +627,9 @@
                     '94115', '94116', '94117', '94118', '94121', '94123', '94124', '94127', '94129', '94130', '94131',
                     '94132', '94133', '94134', '94158'
                 ]
+            },
+            options: {
+                responsive: false
             }
         })
 
