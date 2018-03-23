@@ -161,7 +161,6 @@ label {
 	color: #99a1a7;
 }
 
-
 #footer {
     text-align: center;
 }
@@ -184,43 +183,12 @@ label {
     width: 1450px;
     border: 2px solid #ccc;
     position: relative;
-    margin-bottom: 200px;
-}
-
-#num_call_type {
-    position: relative;
-    display: inline-block;
-    width: 1500px;
-    height: 700px;
-    float: right;
-    margin-bottom: 250px;
-}
-
-#call_type_chart {
-    display: inline-block;
-    width: 800px;
-    height: 550px;
-    position: relative;
-    float: right;
-    top: -515px;
-    right: 50px;
-}
-
-#call_type_chart_description {
-    position: relative;
-    display: inline-block;
-    width: 500px;
-    top: -590px;
-    font-size: 30px;
-    line-height: 220%;
-}
-
-#call_type_chart_description br {
-    margin-bottom: 50px;
+    margin-bottom: 150px;
 }
 
 #avg_resol_time {
     position: relative;
+    margin-bottom: 200px;
 }
 
 #resolution_time_chart {
@@ -228,7 +196,9 @@ label {
     width: 800px;
     height: 650px;
     position: relative;
-    left: 40px;
+    left: 80px;
+    float: left;
+    top: 70px;
 }
 
 #avg_resol_time_description {
@@ -238,19 +208,47 @@ label {
     position: relative;
     text-align: left;
     line-height: 150%;
-    top: -700px;
     float: right;
-    right: 150px;
+    right: 100px;
 }
 
 #avg_resol_time_description br {
     margin-bottom: 40px;
 }
 
+#num_call_type {
+    position: relative;
+    margin-bottom: 200px;
+}
+
+#call_type_chart {
+    display: inline-block;
+    width: 800px;
+    height: 550px;
+    position: relative;
+    float: right;
+    top: 75px;
+    right: 20px;
+}
+
+#call_type_chart_description {
+    position: relative;
+    display: inline-block;
+    width: 500px;
+    font-size: 30px;
+    float: left;
+    line-height: 220%;
+    left: 70px;
+}
+
+#call_type_chart_description br {
+    margin-bottom: 50px;
+}
+
+
 #incident_times {
     display: inline-block;
     position: relative;
-    width: inherit;
 }
 
 #incident_time_chart {
@@ -258,8 +256,9 @@ label {
     position: relative;
     width: 800px;
     height: 650px;
-    left: 50px;
-    top: -700px;
+    left: 70px;
+    top: 100px;
+    float: left;
 }
 
 #incident_times_description {
@@ -267,10 +266,59 @@ label {
     position: relative;
     font-size: 30px;
     width: 500px;
-    right: -700px;
-    top: -1350px;
+    left: 250px;
     line-height: 200%;
 }
+
+#inc_times_drp {
+    position: absolute;
+    display: inline-block;
+}
+
+#inc_times_drp_btn {
+    background-color: #4A8DC1;
+    color: white;
+    padding: 10px;
+    font-size:  16px;
+    border: none;
+    width: 150px;
+    position: absolute;
+    right: 540px;
+    bottom: -125px;
+}
+
+#inc_times_drp_btn_content {
+    display: none;
+    list-style: none;
+    position: absolute;
+    right: 433px;
+    top: 125px;
+    text-align: left;
+    width: 255px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#inc_times_drp_btn_content li {
+    list-style: none;
+    color: black;
+    text-decoration: none;
+    display: block;
+    padding: 12px;
+    text-align: left;
+}
+
+#inc_times_drp_btn_content li:hover {
+    color: #999;
+}
+
+#inc_times_drp:hover #inc_times_drp_btn_content {
+    display: block;
+}
+
+
 
 .clearfix::after {
     content: "";
