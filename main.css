@@ -42,13 +42,16 @@ li:hover {
 }
 
 #nav_bar {
-    font-size: 30px;
+    font-size: 25px;
     background-color: white;
-    position:sticky;
+    position: sticky;
     top: -2px;
-    z-index: 1000;
+    z-index: 5000;
     padding-top: 20px;
     padding-bottom: 25px;
+    box-shadow: 0px 5px 20px #888;
+    width: 1500px;
+    margin: 0 auto;
 }
 
 #bottom_image {
@@ -67,134 +70,52 @@ li:hover {
 
 #background_border {
     margin: 75px 70px 10px 70px;
-    background-color: white;
+    /*background-color: #eee;*/
+    background: linear-gradient(#eee, #fff);
     border-radius: 10px;
 }
 
-.tabs {
-    overflow: hidden;
+#tab {
     border: 1px solid #ccc;
-    background-color: white;
-}
-
-#tab_bar_1 {
-    position: relative;
-    width: 398px;
-    left: 23px;
-    top: -17px;
-}
-
-.tab_button {
-    background-color: inherit;
-    font-family: inherit;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
+    height: 20px;
+    width: 250px;
     font-family: inherit;
     font-size: 16px;
-    padding: 10px 16px;
-    z-index: 999;
-    display: inline-block;
-    outline: none;
-}
-
-.tab_button:hover {
-    background-color: #ccc;
-}
-
-.tab_button.active {
-    border-bottom: 1px solid white;
-}
-
-.tab_content {
-    display: none;
     background-color: white;
+    padding: 10px 25px;
+    z-index: 1100;
+    display: inline-block;
     position: absolute;
-    width: 1402px;
-    height: 175px;
-    top: 927px;
-    left: 205px;
-    margin: auto;
+    top: 22px;
+    left: 24px;
+    text-align: center;
+}
+
+#tab_content {
+    display: inline-block;
+    background-color: white;
+    position: relative;
+    width: 300px;
+    height: 743px;
+    top: 22px;
+    left: 24px;
     border: 1px solid #ccc;
-    border-top: none;
 }
 
-#incident_locations {
-
-}
-
-#emergency_prediction button {
-    border: 1px solid black;
-    overflow: hidden;
-    background-color: #ccc;
-}
-
-#prediction_description {
-    line-height: normal;
-}
-
-#most_likely_dispatch {
-
-}
-
-#checkbox_row_1 {
+#checkboxes {
     position: absolute;
     left: 10px;
     top: 10px;
     line-height: 185%;
 }
 
-#checkbox_row_1_label {
+#checkbox_labels {
     position: absolute;
     top: 8px;
     left: 40px;
     font-size: 15px;
     line-height: 220%;
-}
-
-#checkbox_row_2 {
-    position: absolute;
-    left: 275px;
-    top: 10px;
-    line-height: 185%;
-}
-
-#checkbox_row_2_label {
-    position: absolute;
-    top: 8px;
-    left: 308px;
-    font-size: 15px;
-    line-height: 220%;
-}
-
-#checkbox_row_3 {
-    position: absolute;
-    left: 600px;
-    top: 10px;
-    line-height: 185%;
-}
-
-#checkbox_row_3_label {
-    position: absolute;
-    top: 8px;
-    left: 630px;
-    font-size: 15px;
-    line-height: 220%;
-}
-
-#checkbox_row_4 {
-    position: absolute;
-    left: 925px;
-    top: 10px;
-    line-height: 185%;
-}
-
-#checkbox_row_4_label {
-    position: absolute;
-    top: 8px;
-    left: 955px;
-    font-size: 15px;
-    line-height: 220%;
+    width: 250px;
 }
 
 label {
@@ -203,6 +124,10 @@ label {
 
 .checkbox {
     display: none;
+}
+
+.checkbox + label:hover {
+    cursor: pointer;
 }
 
 .checkbox + label {
@@ -243,20 +168,119 @@ label {
 
 #map {
     position: relative;
-    top: 25px;
+    top: 22px;
+    left: 18px;
     height: 100%;
-    height: 600px;
-    width: 1400px;
-    margin: auto;
+    height: 782px;
+    width: 1100px;
     border: 2px solid #CCCCCC;
+    display: inline-block;
 }
 
 #map_border {
-    background-color: #EEEEEE;
+    background-color: #ddd;
     margin: auto;
     height: 828px;
     width: 1450px;
-    border: 2px solid #DDDDDD;
+    border: 2px solid #ccc;
+    position: relative;
+    margin-bottom: 200px;
+}
+
+#num_call_type {
+    position: relative;
+    display: inline-block;
+    width: 1500px;
+    height: 700px;
+    float: right;
+    margin-bottom: 250px;
+}
+
+#call_type_chart {
+    display: inline-block;
+    width: 800px;
+    height: 550px;
+    position: relative;
+    float: right;
+    top: -515px;
+    right: 50px;
+}
+
+#call_type_chart_description {
+    position: relative;
+    display: inline-block;
+    width: 500px;
+    top: -590px;
+    font-size: 30px;
+    line-height: 220%;
+}
+
+#call_type_chart_description br {
+    margin-bottom: 50px;
+}
+
+#avg_resol_time {
+    position: relative;
+}
+
+#resolution_time_chart {
+    display: inline-block;
+    width: 800px;
+    height: 650px;
+    position: relative;
+    left: 40px;
+}
+
+#avg_resol_time_description {
+    display: inline-block;
+    font-size: 30px;
+    width: 500px;
+    position: relative;
+    text-align: left;
+    line-height: 150%;
+    top: -700px;
+    float: right;
+    right: 150px;
+}
+
+#avg_resol_time_description br {
+    margin-bottom: 40px;
+}
+
+#incident_times {
+    display: inline-block;
+    position: relative;
+    width: inherit;
+}
+
+#incident_time_chart {
+    display: inline-block;
+    position: relative;
+    width: 800px;
+    height: 650px;
+    left: 50px;
+    top: -700px;
+}
+
+#incident_times_description {
+    float: right;
+    position: relative;
+    font-size: 30px;
+    width: 500px;
+    right: -700px;
+    top: -1350px;
+    line-height: 200%;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+#geocode_map {
+    position: relative;
+
 }
 
 #page_title {

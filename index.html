@@ -38,63 +38,25 @@
                 <h1 id="page_title">San Francisco Emergency Response Statistics</h1>
             </div>
 
-
-
-
             <div id="nav_bar">
                 <ul>
-                    <li id="incident_info">Incident Information</li>
                     <li id="interesting_metrics">Interesting Metrics</li>
+                    <script>document.getElementById("interesting_metrics").addEventListener("click", function(){showTab("interesting_metrics"))});</script>
+                    <li id="emergency_prediction">Emergency Prediction</li>
+                    <script>document.getElementById("emergency_prediction").addEventListener("click", function(){showTab("emergency_metrics"))});</script>
                     <li id="avg_dispatch_data">Average Dispatch Data</li>
+                    <script>document.getElementById("avg_dispatch_data").addEventListener("click", function(){showTab("avg_dispatch_data"))});</script>
                 </ul>
             </div>
-            <script>
-                $("#incident_info").click(function() {
-                    $('html, body').animate({
-                        scrollTop: $("#incident_time_chart").offset().top
-                    }, 1500);
-                });
-            </script>
 
-            <p id="page_description">This webpage provides some trends found in data provided by<br /> the San Francisco Fire Department.</p>
+            <p id="page_description"><br /> </p>
 
-            <div id="tabset_1">
+            <div id="interesting_metrics">
                 <!-- for the whole first tabbed section -->
                 <!--FIXME include charts -->
                 <div id="map_border">
-                    <div id="map"></div>
-
-                    <script>
-                    function showTab(e, element) {
-                        var tab_content = document.getElementsByClassName("tab_content");
-
-                        for (let i = 0; i < tab_content.length; i++) {
-                            tab_content[i].style.display = "none";
-                        }
-
-                        var tab_buttons = document.getElementsByClassName("tab_button");
-                        for (let i = 0; i < tab_buttons.length; i++) {
-                            tab_buttons[i].className = tab_buttons[i].className.replace(" active", "");
-                        }
-
-                        document.getElementById(element).style.display = "block";
-                        e.currentTarget.className += " active";
-
-                    }
-                    </script>
-
-
-                    <div class="tabs" id="tab_bar_1">
-                        <button class="tab_button" id="tab_1_button_1">Incident Locations</button>
-                        <script>document.getElementById("tab_1_button_1").addEventListener("click", function(event){showTab(event, "incident_locations")});</script>
-                        <button class="tab_button" id="tab_1_button_2">Emergency Prediction</button>
-                        <script>document.getElementById("tab_1_button_2").addEventListener("click", function(event){showTab(event, "emergency_prediction")});</script>
-                    </div>
-
-
-
-                    <div class="tab_content" id="incident_locations">
-
+                    <div id="tab"><span>Incident Locations</span></div>
+                    <div id="tab_content">
 
                         <script>
                             // This function toggles the markers on the map.
@@ -108,9 +70,8 @@
                             }
                         </script>
 
-                        <!-- Checkboxes for the left side of the panel -->
-                        <div id="checkbox_row_1">
-
+                        <!-- Checkboxes for the left side of the map -->
+                        <div id="checkboxes">
                             <input type="checkbox" id="checkbox_1" class="checkbox" autocomplete="off"><label for="checkbox_1"></label>
                             <script>
                                 document.getElementById("checkbox_1").addEventListener("click", function() {
@@ -149,18 +110,7 @@
                                     showMarkers("fuel", 4, "checkbox_5");
                                 });
                             </script>
-
-                        </div>
-
-                        <div id="checkbox_row_1_label">
-                            <span>Alarm</span><br />
-                            <span>Citizen Assist / Service Call</span><br />
-                            <span>Electrical Hazard</span><br />
-                            <span>Elevator Rescue</span><br />
-                            <span>Fuel Spill</span><br />
-                        </div>
-
-                        <div id="checkbox_row_2">
+                            <br />
 
                             <input type="checkbox" id="checkbox_6" class="checkbox" autocomplete="off"><label for="checkbox_6"></label>
                             <script>
@@ -194,23 +144,14 @@
                             </script>
                             <br />
 
-                            <input type="checkbox" id="checkbox_10" class="checkbox" autocomplete="off"><label for="checkbox_10"></label><br />
+                            <input type="checkbox" id="checkbox_10" class="checkbox" autocomplete="off"><label for="checkbox_10"></label>
                             <script>
                                 document.getElementById("checkbox_10").addEventListener("click", function() {
                                     showMarkers("other", 9, "checkbox_10");
                                 });
                             </script>
-                        </div>
+                            <br />
 
-                        <div id="checkbox_row_2_label">
-                            <span>Gas Leak (Natural and LP Gases)</span><br />
-                            <span>HazMat</span><br />
-                            <span>Medical Incident</span><br />
-                            <span>Odor (Strange / Unknown)</span><br />
-                            <span>Other</span><br />
-                        </div>
-
-                        <div id="checkbox_row_3">
                             <input type="checkbox" id="checkbox_11" class="checkbox" autocomplete="off"><label for="checkbox_11"></label>
                             <script>
                                 document.getElementById("checkbox_11").addEventListener("click", function() {
@@ -249,17 +190,8 @@
                                     showMarkers("train", 14, "checkbox_15");
                                 });
                             </script>
-                        </div>
+                            <br />
 
-                        <div id="checkbox_row_3_label">
-                            <span>Outside Fire</span><br />
-                            <span>Smoke Investigation (Outside)</span><br />
-                            <span>Structure Fire</span><br />
-                            <span>Traffic Collision</span><br />
-                            <span>Train / Rail Incident</span><br />
-                        </div>
-
-                        <div id="checkbox_row_4">
                             <input type="checkbox" id="checkbox_16" class="checkbox" autocomplete="off"><label for="checkbox_16"></label>
                             <script>
                                 document.getElementById("checkbox_16").addEventListener("click", function() {
@@ -276,79 +208,160 @@
                             </script>
                         </div>
 
-                        <div id="checkbox_row_4_label">
+                        <div id="checkbox_labels">
+                            <span>Alarm</span><br />
+                            <span>Citizen Assist / Service Call</span><br />
+                            <span>Electrical Hazard</span><br />
+                            <span>Elevator Rescue</span><br />
+                            <span>Fuel Spill</span><br />
+                            <span>Gas Leak (Natural and LP Gases)</span><br />
+                            <span>HazMat</span><br />
+                            <span>Medical Incident</span><br />
+                            <span>Odor (Strange / Unknown)</span><br />
+                            <span>Other</span><br />
+                            <span>Outside Fire</span><br />
+                            <span>Smoke Investigation (Outside)</span><br />
+                            <span>Structure Fire</span><br />
+                            <span>Traffic Collision</span><br />
+                            <span>Train / Rail Incident</span><br />
                             <span>Vehicle Fire</span><br />
                             <span>Water Rescue</span><br />
                         </div>
                     </div>
 
-                    <div class="tab_content" id="emergency_prediction">
-                        <div id="prediction_description">
-                        <p>Given a time and address, this predicts the most likely emergency that had occurred.
-                            <br />This also gives the dispatch most sent to that area during that time.</p>
-                        </div>
-
-                            <div id="most_likely_dispatch">
-                                Address <input type="text" id="address_input"> <br />
-                                Time: (Please use the format 00:00 AM) <input type="text" id="time_input"> <br />
-                                <button id="get_dispatch_button">Predict Dispatch and Emergency</button>
-                                <script></script>
-                            </div>
-
-                    </div>
-
+                    <div id="map"></div>
 
                 </div>
             </div>
 
+            <div id="avg_resol_time" class="clearfix">
 
+                <canvas id="resolution_time_chart" width="800" height="650"></canvas>
+                <script>
+                    var resolutionTimeChart = new Chart(document.getElementById("resolution_time_chart"), {
+                        type: 'bar',
+                        data: {
+                            datasets: [{ //FIXME call updateChart on page load to update this data
+                                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                                label: "Average Minutes to Resolve Situation"
+                            }],
 
-
-
-
-
-
-
-
-            <div id="content">
-
-                <canvas id="call_type_chart" width="400" height="250" style="display: block; width = 100px; height = 50px;"></canvas>
-                <canvas id="incident_time_chart" width="400" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
-                <canvas id="resolution_time_chart" width="400" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
-                <canvas id="avg_dispatch_chart" width="400" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
-
-
-                <div id="call_type_data">
-                    <button id="alarm_button">Alarm data</button>
-                    <button id="citizen_button">citizen data</button>
-                    <button id="ele_haz_button">ele haz data</button>
-                    <button id="ele_rescue_button">ele rescue data</button>
-                    <button id="fuel_button">fuel data</button>
-                    <button id="gas_button">gas data</button>
-                    <button id="hazmat_button">hazmat data</button>
-                    <button id="med_inc_button">med_inc data</button>
-                    <button id="odor_button">odor data</button>
-                    <button id="other_button">other data</button>
-                    <button id="out_fire_button">out_fire data</button>
-                    <button id="smoke_button">smoke data</button>
-                    <button id="struct_fire_button">struct fire data</button>
-                    <button id="traffic_button">traffic data</button>
-                    <button id="train_button">train data</button>
-                    <button id="vehicle_button">vehicle data</button>
-                    <button id="water_button">water data</button>
-                    <button id="resolution_button">resolution</button>
-                    <button id="avg_dispatch_button">dispatch</button>
-                    <button id="heatmap_data">heatmap</button>
-                    <button id="init_button">init</button>
-                    <button id="dipatch">yeah</button>
-                </div>
+                            labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
+                                'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
+                                'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
+                                'Vehicle Fire', 'Water Rescue'
+                            ]
+                        },
+                        options: {
+                            responsive: false,
+                            scaleShowValues: true,
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }],
+                                xAxes: [{
+                                    ticks: {
+                                        autoSkip: false
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                </script>
+                <p id="avg_resol_time_description">This chart displays the average time it takes for emergency responders to become available again after arriving on scene, organized by incident type. <br />Train and rail incidents seem to take the longest to resolve, followed by building
+                    fires and water rescues. However, note that because of the large differences in sample sizes, the data shown may be inaccurate for certain types of incidents.
+                </p>
             </div>
-            <p id="footer">Created by Katherine Kolman</p>
 
+            <div id="num_call_type" class="clearfix">
+                <p id="call_type_chart_description">This chart displays the number of occurences of each incident. Click on the labels to toggle each type of incident. <br /> The incident that overwhelmingly occurred the most was medical emergencies, followed by alarms and building fires.</p>
+                <canvas id="call_type_chart" width="800" height="550"></canvas>
+                <script>
+                    new Chart(document.getElementById("call_type_chart"), {
+                        type: 'doughnut',
+                        data: {
+                            datasets: [{
+                                data: [1061, 114, 21, 23, 10, 86, 3, 6791, 10, 129, 144, 15, 1029, 410, 55, 45, 54]
+                            }],
+
+                            labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
+                                'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
+                                'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
+                                'Vehicle Fire', 'Water Rescue'
+                            ]
+                        },
+                        options: {
+                            responsive: false
+                        }
+                    });
+                </script>
+            </div>
+
+            <div id="incident_times">
+                <canvas id="incident_time_chart" width="800" height="650"></canvas>
+                <script>
+                    var incidentTimeChart = new Chart(document.getElementById("incident_time_chart"), {
+                        type: 'line',
+                        data: {
+                            datasets: [{
+                                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                                label: "Number of Occurences"
+                            }],
+                            labels: ['12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM',
+                                '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'
+                            ]
+                        },
+                        options: {
+                            responsive: false
+                        }
+                    });
+                </script>
+                <p id="incident_times_description">This graph displays the number of occurences of a certain incident type throughout the day. Many interesting trends can be drawn from this data, and again, due to the smaller sample sizes for some incidents, there may be insufficient data
+                    for certain incident types to draw any meaningful conclusions.
+                </p>
+            </div>
+
+            <div id="emergency_prediction">
+                <canvas id="geocode_map"></canvas>
+            </div>
+
+            <div id="avg_dispatch_data"></div>
+
+            <!-- <canvas id="avg_dispatch_chart" width="400" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
+
+            <div id="call_type_data">
+                <button id="alarm_button">Alarm data</button>
+                <button id="citizen_button">citizen data</button>
+                <button id="ele_haz_button">ele haz data</button>
+                <button id="ele_rescue_button">ele rescue data</button>
+                <button id="fuel_button">fuel data</button>
+                <button id="gas_button">gas data</button>
+                <button id="hazmat_button">hazmat data</button>
+                <button id="med_inc_button">med_inc data</button>
+                <button id="odor_button">odor data</button>
+                <button id="other_button">other data</button>
+                <button id="out_fire_button">out_fire data</button>
+                <button id="smoke_button">smoke data</button>
+                <button id="struct_fire_button">struct fire data</button>
+                <button id="traffic_button">traffic data</button>
+                <button id="train_button">train data</button>
+                <button id="vehicle_button">vehicle data</button>
+                <button id="water_button">water data</button>
+                <button id="resolution_button">resolution</button>
+                <button id="avg_dispatch_button">dispatch</button>
+                <button id="heatmap_data">heatmap</button>
+                <button id="init_button">init</button>
+                <button id="dipatch">yeah</button>
+            </div> -->
         </div>
-        <div id="bottom_image">
-            <img src="images/goldengatebridge2.jpg" />
-        </div>
+        <p id="footer">Created by Katherine Kolman</p>
+
+    </div>
+    <div id="bottom_image">
+        <img src="images/goldengatebridge2.jpg" />
+    </div>
     </div>
 
 
@@ -356,10 +369,9 @@
     <!-- FIXME add a banner at bottom, link github page -->
 
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&libraries=visualization&callback=initialize"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&libraries=visualization,places&callback=initialize"></script>
 
     <script>
-        document.getElementById("get_dispatch_button").addEventListener("click", findAddress);
         document.getElementById("dipatch").addEventListener("click", function() {
             updateChart(avgDispatchChart, getAvgDispatchTime());
         });
@@ -496,6 +508,8 @@
             };
             //    geocodeMap = new google.maps.Map(document.getElementById("map"), options);
             markerMap = new google.maps.Map(document.getElementById("map"), options);
+            geocodeMap = new google.maps.Map(document.getElementById("geocode_map"), options);
+            geocodeMap.set('zoom', 14);
             //    dispatchTimeHeatmap = new google.maps.Map(document.getElementById("map"), options);
 
             //    var heatData = getHeatmapData();
@@ -551,70 +565,70 @@
 
         // the chart containing the number of all of the different types of incidents
 
-        new Chart(document.getElementById("call_type_chart"), {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [1061, 114, 21, 23, 10, 86, 3, 6791, 10, 129, 144, 15, 1029, 410, 55, 45, 54]
-                }],
+        // new Chart(document.getElementById("call_type_chart_canvas"), {
+        //     type: 'doughnut',
+        //     data: {
+        //         datasets: [{
+        //             data: [1061, 114, 21, 23, 10, 86, 3, 6791, 10, 129, 144, 15, 1029, 410, 55, 45, 54]
+        //         }],
+        //
+        //         labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
+        //             'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
+        //             'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
+        //             'Vehicle Fire', 'Water Rescue'
+        //         ]
+        //     },
+        //     options: {
+        //         responsive: false
+        //     }
+        // });
 
-                labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
-                    'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
-                    'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
-                    'Vehicle Fire', 'Water Rescue'
-                ]
-            },
-            options: {
-                responsive: false
-            }
-        });
+        // var resolutionTimeChart = new Chart(document.getElementById("resolution_time_chart"), {
+        //     type: 'bar',
+        //     data: {
+        //         datasets: [{ //FIXME call updateChart on page load to update this data
+        //             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        //         }],
+        //
+        //         labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
+        //             'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
+        //             'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
+        //             'Vehicle Fire', 'Water Rescue'
+        //         ]
+        //     },
+        //     options: {
+        //         responsive: false,
+        //         scaleShowValues: true,
+        //         scales: {
+        //             yAxes: [{
+        //                 ticks: {
+        //                     beginAtZero: true
+        //                 }
+        //             }],
+        //             xAxes: [{
+        //                 ticks: {
+        //                     autoSkip: false
+        //                 }
+        //             }]
+        //         }
+        //     }
+        // });
 
-        var resolutionTimeChart = new Chart(document.getElementById("resolution_time_chart"), {
-            type: 'bar',
-            data: {
-                datasets: [{ //FIXME call updateChart on page load to update this data
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                }],
-
-                labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
-                    'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
-                    'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
-                    'Vehicle Fire', 'Water Rescue'
-                ]
-            },
-            options: {
-                responsive: false,
-                scaleShowValues: true,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            autoSkip: false
-                        }
-                    }]
-                }
-            }
-        });
-
-        var incidentTimeChart = new Chart(document.getElementById("incident_time_chart"), {
-            type: 'line',
-            data: {
-                datasets: [{
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    label: "Number of Occurences"
-                }],
-                labels: ['12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM',
-                    '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'
-                ]
-            },
-            options: {
-                responsive: false
-            }
-        });
+        // var incidentTimeChart = new Chart(document.getElementById("incident_time_chart"), {
+        //     type: 'line',
+        //     data: {
+        //         datasets: [{
+        //             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //             label: "Number of Occurences"
+        //         }],
+        //         labels: ['12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM',
+        //             '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'
+        //         ]
+        //     },
+        //     options: {
+        //         responsive: false
+        //     }
+        // });
 
         var avgDispatchChart = new Chart(document.getElementById("avg_dispatch_chart"), {
             type: 'bar',
