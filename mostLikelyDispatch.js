@@ -11,14 +11,21 @@
 function findAddress() {
     var addressData = [];
     var dispatchData = [];
-    var input = document.getElementById('address_input').value;
-    var latBound1 = 37.6065538;
+    var adInput = document.getElementById('address_input').value;
+    let bounds = new google.maps.LatLngBounds(
+                    new google.maps.LatLng(37.6, -122.6),
+                    new google.maps.LatLng(37.9, -122.3));
 
+    if (adInput == 0 || document.getElementById("time_input").value == 0) {
+        document.getElementById('pred_output').innerHTML = "Please enter information into the fields.";
+        return;
+    }
 
 
     // gets the latitude and longitude from the inputted address
     geocoder.geocode({
-        address: input
+        address: adInput,
+        bounds: bounds
     }, function(results, status) {
         if (status == 'OK') {
             geocodeMap.setCenter(results[0].geometry.location);
@@ -34,11 +41,17 @@ function findAddress() {
             });
 
             addressData = searchNearby(addressLat, addressLong);
+            if (addressData == undefined || addressData.length == 0) {
+                return;
+            }
             dispatchData = searchTime(addressData);
+            if (dispatchData === undefined) {
+                return;
+            }
             getDispatch(dispatchData);
 
         } else {
-            alert("The Geocode was not successful for the following reason: " + status);
+            document.getElementById("pred_output").innerHTML = "The Geocode was not successful for the following reason: " + status;
         }
     });
 }
@@ -74,7 +87,7 @@ function searchNearby(addressLat, addressLong) {
 
     if (counter >= 5) {
         //FIXME change to a printout instead of alert
-        alert("No data found for that location.");
+        document.getElementById("pred_output").innerHTML = "No data found for that location.";
         return addressData;
     }
 }
@@ -110,15 +123,12 @@ function searchTime(addressData) {
         if (((hour == 0 || hour == 00) && timeOfDay == "AM") ||
             (hour < 12 && timeOfDay == "PM")) {
             hour = 12 + hour;
-        } else if (hour > 23 || hour < 0) {
-            alert("Please give a valid time.");
-            return;
-        } else if (timeOfDay.length > 2) {
-            alert("Please give a valid time.");
+        } else if (hour > 23 || hour < 0 || timeOfDay.length > 2 || (timeOfDay == "AM" && hour > 12)) {
+            document.getElementById("pred_output").innerHTML = "Please give a valid time.";
             return;
         }
     } catch (e) {
-        alert("Please format the time as 00:00 AM/PM.");
+        document.getElementById("pred_output").innerHTML = "Please format the time as 00:00 AM/PM.";
         return;
     }
 
@@ -156,7 +166,7 @@ function searchTime(addressData) {
 
     //FIXME change to printout
     if (nearestTimes.length == 0) {
-        alert("No data found for the given time and address.");
+        document.getElementById("pred_output").innerHTML = "No data found for the given time and address.";
     } else {
         return nearestTimes;
     }
@@ -164,7 +174,7 @@ function searchTime(addressData) {
 
 function getDispatch(dispatchData) {
     if (dispatchData.length == 0) {
-        alert("No data found for that time and location.");
+        document.getElementById("pred_output").innerHTML = "No data found for that time and location.";
         return;
     }
 
@@ -210,6 +220,53 @@ function getDispatch(dispatchData) {
         }
     }
 
+    temp1[0] = convert(temp1[0]);
+    temp2[0] = convert(temp2[0]);
+
     //FIXME change to a printout
-    alert("The most likely emergency was " + temp1[0] + " and the unit most sent to that area is " + temp2[0]);
+    document.getElementById("pred_output").innerHTML = "The most likely dispatch sent for that time and location is " + temp2[0] + ", while" +
+     " the most likely emergency in the area at that time would be " + temp1[0] + ".";
+}
+
+function convert(string) {
+    switch (string) {
+        // unit types
+        case "PRIVATE":
+        case "SUPPORT":
+            return "a " + string.toLowerCase() + " unit";
+        case "ENGINE":
+        case "TRUCK":
+            return "a fire " + string.toLowerCase();
+        case "RESCUE SQUAD":
+        case "RESCUE CAPTAIN":
+            return "a " + string.toLowerCase();
+        case "CHIEF":
+            return "a fire chief unit";
+        case "INVESTIGATION":
+            return "an investigation unit";
+        case "MEDIC":
+            return "a medical unit";
+        //emergency types
+        case "Alarms":
+            return "an alarm";
+        case "Citizen Assist / Service Call":
+        case "Fuel Spill":
+        case "Gas Leak (Natural and LP Gases)":
+        case "Medical Incident":
+        case "Smoke Investigation (Outside)":
+        case "Structure Fire":
+        case "Traffic Collision":
+        case "Train / Rail Incident":
+        case "Vehicle Fire":
+            return "a " + string.toLowerCase();
+        case "Elevator / Escalator Rescue":
+        case "Electrical Hazard":
+        case "Odor (Strange / Unknown)":
+        case "Outside Fire":
+            return "an " + string.toLowerCase();
+        case "HazMat":
+            return "a " + string + " incident";
+        default:
+            return string.toLowerCase();
+    }
 }

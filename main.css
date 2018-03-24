@@ -1,9 +1,10 @@
 body {
-    /*background-color: #dedcdb;*/
-    background: linear-gradient(#bce0df, #4A8DC1); /*#7ea89d;*/
+    /*background-color: #dedcdb;*/ /*#7ea89d;*/
+    /*background: linear-gradient(#bce0df, #4A8DC1);*/
     font-family: "Montserrat", sans-serif;
-    height: 100%;
+    min-height: 100%;
     cursor: default;
+    background: #5B98C7;
 }
 
 #container {
@@ -22,28 +23,21 @@ button {
     font-family: "Montserrat", sans-serif;
 }
 
-ul {
+li {
+    list-style: none;
+}
+
+#nav_bar ul {
     list-style-type: none;
     margin: 0;
     padding: 0px;
     text-align: center;
 }
 
-li {
-    display: inline;
-    padding-left: 100px;
-    padding-right: 100px;
-}
-
-li:hover {
-    cursor: pointer;
-    color: #666666;
-    transition: 0.1s;
-}
 
 #nav_bar {
     font-size: 25px;
-    background-color: white;
+    background-color: #5B98C7;
     position: sticky;
     top: -2px;
     z-index: 5000;
@@ -52,18 +46,40 @@ li:hover {
     box-shadow: 0px 5px 20px #888;
     width: 1500px;
     margin: 0 auto;
+    border-radius: 10px;
+}
+
+.tab_link {
+    display: inline;
+    margin-left: 100px;
+    margin-right: 100px;
+    color: #FFF;
+}
+
+.tab_link:hover {
+    cursor: pointer;
+    color: #BBB;
+    transition: 0.2s;
+}
+
+.tab_content {
+    display: none;
+}
+
+.tab_content:active {
+    display: block;
 }
 
 #bottom_image {
     position: relative;
     bottom: 0;
-    left:0%;
+    left: 0;
     /*margin-left: -10px;
     margin-bottom: -9px;
     margin-right: -8px;
     margin-top: -15px;*/
 
-    margin: -15px -8px -9px -10px;
+    margin: -10px -8px -9px -10px;
     overflow: hidden;
 }
 
@@ -75,14 +91,17 @@ li:hover {
     border-radius: 10px;
 }
 
-#tab {
+#map_label {
     border: 1px solid #ccc;
     height: 20px;
     width: 250px;
     font-family: inherit;
-    font-size: 16px;
-    background-color: white;
-    padding: 10px 25px;
+    font-size: 22px;
+    color: white;
+    background-color: #5B98C7;
+    padding: 10px;
+    padding-left: 25px;
+    padding-right: 23px;
     z-index: 1100;
     display: inline-block;
     position: absolute;
@@ -91,7 +110,7 @@ li:hover {
     text-align: center;
 }
 
-#tab_content {
+#map_side_content {
     display: inline-block;
     background-color: white;
     position: relative;
@@ -100,21 +119,22 @@ li:hover {
     top: 22px;
     left: 24px;
     border: 1px solid #ccc;
+    border-right: none;
 }
 
 #checkboxes {
     position: absolute;
     left: 10px;
     top: 10px;
-    line-height: 185%;
+    line-height: 272%;
 }
 
 #checkbox_labels {
     position: absolute;
-    top: 8px;
+    top: 4px;
     left: 40px;
     font-size: 15px;
-    line-height: 220%;
+    line-height: 290%;
     width: 250px;
 }
 
@@ -156,23 +176,81 @@ label {
 	content: '\2714';
 	font-size: 23px;
 	position: absolute;
-    top: -2px;
+    top: -10px;
 	left: 2px;
 	color: #99a1a7;
 }
 
-#footer {
+#bottom_bar {
     text-align: center;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    line-height: 70px;
+    height: 70px;
+}
+
+#bottom_bar img {
+    width: 32px;
+    height: 32px;
+    position: relative;
+    top: 8px;
+}
+
+.map {
+    height: 100%;
+}
+
+#geocode_map {
+    height: 100%;
+    height: 500px;
+    width: 500px;
+    position: relative;
+    margin: auto;
+    top: 15px;
+    border: 2px solid #ccc;
+}
+
+#geocode_map_border {
+    height: 530px;
+    width: 530px;
+    left: 100px;
+    background: #ddd;
+    position: relative;
+    float: left;
+    border: 2px solid #bbb;
+}
+
+#prediction {
+    display: inline-block;
+    text-align: center;
+    width: 700px;
+    float: right;
+    position: relative;
+    right: 200px;
+}
+
+#pred_description {
+    text-align: center;
+    position: relative;
+    margin-bottom: 100px;
+    font-size: 26px;
+    line-height: 150%;
+    animation: fadein 2s;
+}
+
+@keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
 }
 
 #map {
     position: relative;
     top: 22px;
     left: 18px;
-    height: 100%;
     height: 782px;
     width: 1100px;
-    border: 2px solid #CCCCCC;
+    border: 1px solid #CCCCCC;
     display: inline-block;
 }
 
@@ -188,7 +266,7 @@ label {
 
 #avg_resol_time {
     position: relative;
-    margin-bottom: 200px;
+    margin-bottom: 75px;
 }
 
 #resolution_time_chart {
@@ -204,11 +282,12 @@ label {
 #avg_resol_time_description {
     display: inline-block;
     font-size: 30px;
-    width: 500px;
+    width: 575px;
     position: relative;
     text-align: left;
-    line-height: 150%;
+    line-height: 180%;
     float: right;
+    opacity: 0;
     right: 100px;
 }
 
@@ -218,37 +297,41 @@ label {
 
 #num_call_type {
     position: relative;
-    margin-bottom: 200px;
+    padding-bottom: 100px;
+    background-color: #eee;
+    padding-top: 75px;
 }
 
 #call_type_chart {
     display: inline-block;
-    width: 800px;
-    height: 550px;
+    width: 850px;
+    height: 500px;
     position: relative;
     float: right;
-    top: 75px;
-    right: 20px;
+    top: 55px;
+    right: 50px;
 }
 
 #call_type_chart_description {
     position: relative;
     display: inline-block;
-    width: 500px;
+    width: 600px;
     font-size: 30px;
     float: left;
-    line-height: 220%;
-    left: 70px;
+    line-height: 250%;
+    left: 90px;
+    opacity: 0;
 }
 
 #call_type_chart_description br {
-    margin-bottom: 50px;
+    margin-bottom: -10px;
 }
 
 
 #incident_times {
     display: inline-block;
     position: relative;
+    margin-bottom: 50px;
 }
 
 #incident_time_chart {
@@ -264,10 +347,12 @@ label {
 #incident_times_description {
     float: right;
     position: relative;
-    font-size: 30px;
-    width: 500px;
-    left: 250px;
+    font-size: 28px;
+    width: 600px;
+    left: 200px;
     line-height: 200%;
+    opacity: 0;
+    top: 50px;
 }
 
 #inc_times_drp {
@@ -306,19 +391,20 @@ label {
     color: black;
     text-decoration: none;
     display: block;
-    padding: 12px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-left: -20px;
     text-align: left;
 }
 
 #inc_times_drp_btn_content li:hover {
-    color: #999;
+    color: #888;
+    cursor: pointer;
 }
 
 #inc_times_drp:hover #inc_times_drp_btn_content {
     display: block;
 }
-
-
 
 .clearfix::after {
     content: "";
@@ -326,9 +412,63 @@ label {
     display: table;
 }
 
-#geocode_map {
-    position: relative;
+input {
+    outline: none;
+    font-family: inherit;
+}
 
+#address_input {
+    display: inline-block;
+    position: relative;
+    margin-bottom: 10px;
+    top: -50px;
+    left: 0px;
+    padding: 10px;
+    font-size: 20px;
+    width: 450px;
+    border: 2px solid #ccc;
+    transition: 0.5s;
+}
+
+#time_input {
+    display: inline-block;
+    position: relative;
+    width: 150px;
+    border: 2px solid #ccc;
+    transition: 0.5s;
+    font-size: 20px;
+    padding: 10px;
+    bottom: 50px;
+    left: 0px;
+}
+
+#time_input:focus, #address_input:focus {
+    border: 2px solid #777;
+}
+
+#pred_btn {
+    position: relative;
+    top: -25px;
+    border: 2px solid #5B98C7;
+    transition: 0.5s;
+    padding: 10px;
+    font-family: inherit;
+    color: white;
+    background-color: #5B98C7;
+    font-size: 20px;
+    width: 200px;
+
+}
+
+#pred_btn:hover {
+    background-color: inherit;
+    color: #5B98C7;
+    cursor: pointer;
+}
+
+#pred_output {
+    font-family: inherit;
+    font-size: 20px;
 }
 
 #page_title {
