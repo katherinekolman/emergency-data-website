@@ -70,25 +70,20 @@ li {
     display: block;
 }
 
-#interesting_metrics {
-    display: none;
+#metrics {
+    display: block;
 }
 
 #bottom_image {
     position: relative;
     bottom: 0;
     left: 0;
-    /*margin-left: -10px;
-    margin-bottom: -9px;
-    margin-right: -8px;
-    margin-top: -15px;*/
     margin: -10px -8px -9px -10px;
     overflow: hidden;
 }
 
 #background_border {
     margin: 75px 70px 10px 70px;
-    /*background-color: #eee;*/
     background: linear-gradient(#eee, #fff);
     border-radius: 10px;
 }

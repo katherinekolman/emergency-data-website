@@ -29,3 +29,14 @@ function calcTimeDiff(data) {
         return minuteA + hourA * 60;
     }
 }
+
+
+function showTab(element) {
+    var tabs = document.getElementsByClassName("tab_content");
+
+    for (let i = 0; i < tabs.length; i++) {
+        tabs[i].style.display = "none";
+    }
+
+    document.getElementById(element).style.display = "block";
+}

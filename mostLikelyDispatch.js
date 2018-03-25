@@ -3,8 +3,6 @@
  * most likely dispatch given an address and time.
  */
 
-//FIXME maybe pass in csvData instead?
-
 /* This function takes the inputted address, finds its latitude and longitude,
  * and uses that to locate nearby addresses from the data set.
  */
@@ -51,7 +49,7 @@ function findAddress() {
             getDispatch(dispatchData);
 
         } else {
-            document.getElementById("pred_output").innerHTML = "The Geocode was not successful for the following reason: " + status;
+            document.getElementById("pred_output").innerHTML = "No data found.";
         }
     });
 }

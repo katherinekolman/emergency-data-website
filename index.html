@@ -16,68 +16,55 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- FIXME check -->
+    <meta name="description" content="Statistics and trends from data given by the San Francisco Fire Department.">
+    <meta name="author" content="Katherine Kolman">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>San Francisco Emergency Trends</title>
 
-
+    <!-- Styling -->
     <link rel="stylesheet" href="main.css" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 
-    <script src="jquery.js"></script>
+    <!-- jQuery, used to parse the CSV file -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Chart.js, used for the charts and graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
+    <!-- MarkerClusterer.js, used for mapping incident locations -->
+    <script src="markerclusterer.js"></script>
+
+    <!-- My own JS files -->
     <script src="parseCSV.js"></script>
-    <script src="Chart.js"></script>
-    <script src="utils.js"></script>
     <script src="googleMaps.js"></script>
+    <script src="utils.js"></script>
     <script src="getCategoryData.js"></script>
     <script src="mostLikelyDispatch.js"></script>
-    <script src="markerclusterer.js"></script>
     <script src="sortByZipcode.js"></script>
     <script src="avgDispatchData.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&libraries=visualization,places&callback=initialize"></script>
-
 </head>
 
 <body>
-
-    <script>
-    </script>
-
     <div id="container">
         <div id="background_border">
             <div id="banner">
-                <h1 id="page_title">San Francisco Emergency Response Statistics</h1>
+                <h1 id="page_title">San Francisco Emergency Statistics</h1>
             </div>
 
-            <script>
-                window.onload = function() {
-                    showTab("emergency_prediction");
-
-
-                }
-            </script>
-
-
-
-            <script>
-                function showTab(element) {
-                    var tabs = document.getElementsByClassName("tab_content");
-
-                    for (let i = 0; i < tabs.length; i++) {
-                        tabs[i].style.display = "none";
-                    }
-
-                    document.getElementById(element).style.display = "block";
-                }
+            <script> //when the document loads, load up the first page
+            $(function() {
+                showTab("metrics");
+            });
             </script>
 
             <div id="nav_bar">
                 <ul>
-                    <li class="tab_link" id="int_met_tab">Interesting Metrics</li>
+                    <li class="tab_link" id="met_tab">Metrics / Trends</li>
                     <script>
-                        document.getElementById("int_met_tab").addEventListener("click", function() {
-                            showTab("interesting_metrics");
+                        $("#met_tab").click(function() {
+                            showTab("metrics");
                             window.scrollTo(0, 0);
                         });
                     </script>
@@ -85,6 +72,10 @@
                     <script>
                         document.getElementById("emer_pred_tab").addEventListener("click", function() {
                             showTab("emergency_prediction");
+                            window.scrollTo(0, 0);
+                        });
+                        $("#emer_pred_tab").click(function() {
+                            showTab("metrics");
                             window.scrollTo(0, 0);
                         });
                     </script>
@@ -110,7 +101,7 @@
 
             <p id="page_description"><br /> </p>
 
-            <div class="tab_content" id="interesting_metrics">
+            <div class="tab_content" id="metrics">
                 <!-- for the whole first tabbed section -->
                 <!--FIXME include charts -->
                 <div id="map_border">
@@ -291,37 +282,38 @@
 
                 </div>
 
-                <div id="chart_info">
 
-                    <script>
-                        Chart.defaults.global.defaultFontFamily = "Montserrat";
-                        Chart.defaults.global.defaultFontSize = 14;
-                        let i = 0;
-                        window.onscroll = function() {
-                            if (document.getElementById("interesting_metrics").style.display == "block") {
-                                if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
-                                    document.getElementById("avg_resol_time_description").style.transition = "opacity 2s";
-                                    document.getElementById("avg_resol_time_description").style.opacity = "1";
-                                    if (i == 0) {
-                                        updateChart(resolutionTimeChart, getResolutionTime());
-                                    }
-                                }
-                                if (document.body.scrollTop > 1600 || document.documentElement.scrollTop > 1600) {
-                                    document.getElementById("call_type_chart_description").style.transition = "opacity 1.5s";
-                                    document.getElementById("call_type_chart_description").style.opacity = "1";
-                                }
-                                if (document.body.scrollTop > 2300 || document.documentElement.scrollTop > 2300) {
-                                    document.getElementById("incident_times_description").style.transition = "opacity 1.5s";
-                                    document.getElementById("incident_times_description").style.opacity = "1";
-                                    if (i == 0) {
-                                        updateChart(incidentTimeChart, getIncidentTimeData("alarm"));
-                                        updateButton("alarm_drp_btn");
-                                    }
-                                    i++;
+                <script>
+                    Chart.defaults.global.defaultFontFamily = "Montserrat";
+                    Chart.defaults.global.defaultFontSize = 14;
+                    let i = 0;
+                    window.onscroll = function() {
+                        if (document.getElementById("metrics").style.display == "block") {
+                            if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+                                document.getElementById("avg_resol_time_description").style.transition = "opacity 2s";
+                                document.getElementById("avg_resol_time_description").style.opacity = "1";
+                                if (i == 0) {
+                                    updateChart(resolutionTimeChart, getResolutionTime());
                                 }
                             }
-                        };
-                    </script>
+                            if (document.body.scrollTop > 1600 || document.documentElement.scrollTop > 1600) {
+                                document.getElementById("call_type_chart_description").style.transition = "opacity 1.5s";
+                                document.getElementById("call_type_chart_description").style.opacity = "1";
+                            }
+                            if (document.body.scrollTop > 2300 || document.documentElement.scrollTop > 2300) {
+                                document.getElementById("incident_times_description").style.transition = "opacity 1.5s";
+                                document.getElementById("incident_times_description").style.opacity = "1";
+                                if (i == 0) {
+                                    updateChart(incidentTimeChart, getIncidentTimeData("alarm"));
+                                    updateButton("alarm_drp_btn");
+                                }
+                                i++;
+                            }
+                        }
+                    };
+                </script>
+
+                <div id="chart_info">
 
                     <div id="avg_resol_time" class="clearfix">
 
@@ -893,66 +885,10 @@
 
             return avgDispatch;
         }
-
-
-
-        /* This function returns all of the locations of all incidents and weights them according to
-         * their dispatch time. Longer dispatch times will have greater weights.
-         */
-        // function getHeatmapData() {
-        //     var heatmapData = [];
-        //     var dataPoints = [];
-        //
-        //     let temp = [];
-        //     let temp1 = [];
-        //
-        //         for (let i = 0; i < csvData.length - 1; i++) {
-        //             temp = [];
-        //             temp1 = [];
-        //             if (csvData[i][3].length > 0 && csvData[i][5].length > 0 && csvData[i][21].length > 0 &&
-        //                 csvData[i][22].length > 0 && csvData[i][23].length > 0) {
-        //
-        //                 // loop2:
-        //                 // for (let j = 0; j < heatmapData.length; j++) {
-        //                 //     if (heatmapData[j][1].includes(csvData[i][22]) && heatmapData[j][2].includes(csvData[i][23])) {
-        //                 //         continue loop1;
-        //                 //     }
-        //                 // }
-        //
-        //                 temp1.push(csvData[i][3]);
-        //                 temp1.push(csvData[i][5]);
-        //                 temp.push(temp1);
-        //                 temp.push(csvData[i][22]);
-        //                 temp.push(csvData[i][23]);
-        //                 heatmapData.push(temp);
-        //             }
-        //         }
-        //
-        //
-        //
-        //     temp = [];
-        //     for (let i = 0; i < heatmapData.length; i++) {
-        //         temp.push(calcTimeDiff(heatmapData[i][0]));
-        //         if (temp[0] > 500) {
-        //             heatmapData[i][0] = 0;
-        //             temp = [];
-        //             continue;
-        //         } else {
-        //             heatmapData[i][0] = temp[0];
-        //             temp = [];
-        //         }
-        //     }
-        //
-        //     for (var i = 0; i < heatmapData.length; i++) {
-        //         dataPoints.push({
-        //             location: new google.maps.LatLng(parseFloat(heatmapData[i][1]), parseFloat(heatmapData[i][2])),
-        //             // the weight is based on the largest dispatch time (64 min), so the ranges of weights will be 1 - 5.
-        //             weight: (((1 / 16) * parseFloat(heatmapData[i][0])) + 1)
-        //         });
-        //     }
-        //     return (dataPoints);
-        // }
     </script>
+
+    <!-- Google Maps API, used for mapping data -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&libraries=visualization,places&callback=initialize"></script>
 
 </body>
 
