@@ -1,140 +1,136 @@
-var geocoder;
-var markerMap;
-var geocodeMap;
-var dispatchTimeHeatmap;
-var heatmap;
-var markerCluster = [];
-var locations = [];
-var markers = [];
+let geocoder;
+let markerMap;
+let geocodeMap;
+let incidentHeatmap;
+let heatmapLayer;
+let markers = [];
+let markerCluster = [];
 
-/* This function initializes all the maps on the page from the google maps API,
- * including the geocoding map and the general map of San Francisco.
+/**
+ * This function initializes all the maps on the page using the Google Maps API,
+ * including the geocoding map, marker map, and heatmap.
  */
 function initialize() {
-    geocoder = new google.maps.Geocoder();
-    var options = {
+    let i = 0;
+    let mapOptions = {
         center: new google.maps.LatLng(37.7749, -122.4194),
         zoom: 12,
-        mapTypeId: google.maps.MapTypeId.ROADMAP // change the style and colors of map to fit theme of site
+        mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
-    var heatmapOptions = {
+    let heatmapOptions = {
         center: new google.maps.LatLng(37.765, -122.44),
         zoom: 12,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
-
-    markerMap = new google.maps.Map(document.getElementById("map"), options);
-    geocodeMap = new google.maps.Map(document.getElementById("geocode_map"), options);
-    dispatchTimeHeatmap = new google.maps.Map(document.getElementById("avg_dispatch_heatmap"), heatmapOptions);
-
-    heatmap = new google.maps.visualization.HeatmapLayer();
-
-    heatmap.set('opacity', .3);
-    heatmap.set('dissipating', true);
-    heatmap.set('maxIntensity', 10);
-
-    for (var i = 0; i < 18; i++) {
-        markerCluster[i] = new MarkerClusterer(markerMap, markers, {
-            imagePath: "./images/m"
-        });
-    }
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+    };
 
     let bounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng(37.6, -122.6),
-                new google.maps.LatLng(37.9, -122.3));
+        new google.maps.LatLng(37.6, -122.6),
+        new google.maps.LatLng(37.9, -122.3));
 
-    var input = document.getElementById("address_input");
-    var options = {
+    // for the autocomplete in the Emergency Prediction tab
+    let input = $("#address_input")[0];
+    let autocompleteOptions = {
         bounds: bounds,
         types: ["address"]
     };
 
-    autocomplete = new google.maps.places.Autocomplete(input, options);
+    let autocomplete = new google.maps.places.Autocomplete(input, autocompleteOptions);
+
+    geocoder = new google.maps.Geocoder();
+    heatmapLayer = new google.maps.visualization.HeatmapLayer();
+    markerMap = new google.maps.Map($("#marker_map")[0], mapOptions);
+    geocodeMap = new google.maps.Map($("#geocode_map")[0], mapOptions);
+    incidentHeatmap = new google.maps.Map($("#avg_dispatch_heatmap")[0], heatmapOptions);
+
+    heatmapLayer.set("opacity", .3);
+    heatmapLayer.set("dissipating", true);
+    heatmapLayer.set("maxIntensity", 10);
+
+    for (i = 0; i < 18; i++) {
+        markerCluster[i] = new MarkerClusterer(markerMap, markers, {
+            imagePath: "images/m"
+        });
+    }
 }
 
-function updateMap() {
-    var heatData = getHeatmapData();
-    heatmap.setData(heatData);
-    heatmap.setMap(dispatchTimeHeatmap);
+/**
+ * This function updates the heatmap to display the data from the csv file.
+ */
+function updateHeatmap() {
+    let heatData = getHeatmapData();
+    heatmapLayer.setData(heatData);
+    heatmapLayer.setMap(incidentHeatmap);
 }
 
-/* This function places markers at the location of the incidents
- * on a map.
+/**
+ * This function places markers at the location of the incidents on the marker map.
  */
 function mapData(type, index) {
-    locations = [];
-    markers = [];
-    data = [];
+    let i = 0;
+    let locations = [];
+    let data = [];
+
     markerCluster[index].clearMarkers();
 
-    data = getCategoryData(csvData, type);
+    data = getCategoryData(type);
 
-    for (var i = 0; i < data.length; i++) {
+    for (i = 0; i < data.length; i++) {
         locations.push(new google.maps.LatLng(data[i][0], data[i][1]));
     }
 
-    var markers = locations.map(function(location, i) {
+    markers = locations.map(function(location, i) {
         return new google.maps.Marker({
             position: location,
         });
     });
 
     markerCluster[index] = new MarkerClusterer(markerMap, markers, {
-        imagePath: "./images/m"
+        imagePath: "images/m"
     });
 }
 
+/**
+ * This function shows / hides markers on the map.
+ *
+ * @param type  The incident type of the locations to be shown.
+ * @param index The index in the array of markers that is to be cleared / added to.
+ * @param id    The HTML id of the checkbox.
+ */
+function showMarkers(type, index, id) {
+    if ($("#" + id).is(":checked")) {
+        mapData(type, index);
+    }
+    else {
+        markerCluster[index].clearMarkers();
+    }
+}
+
+/**
+ * This function gets the latitude and longitude of all incidents and
+ * converts them into LatLng objects for the heatmap.
+ *
+ * @return Array of LatLngs containing the location of all incidents.
+ */
 function getHeatmapData() {
-    var heatmapData = [];
-    var dataPoints = [];
-
+    let heatmapData = [];
+    let dataPoints = [];
     let temp = [];
-    let temp1 = [];
+    let i = 0;
 
-        //loop1:
-        for (let i = 0; i < csvData.length - 1; i++) {
-            temp = [];
-            temp1 = [];
-            if (csvData[i][3].length > 0 && csvData[i][5].length > 0 && csvData[i][21].length > 0 &&
-                csvData[i][22].length > 0 && csvData[i][23].length > 0) {
-
-                // loop2:
-                // for (let j = 0; j < heatmapData.length; j++) {
-                //     if (heatmapData[j][1].includes(csvData[i][22]) && heatmapData[j][2].includes(csvData[i][23])) {
-                //         continue loop1;
-                //     }
-                // }
-
-                temp1.push(csvData[i][3]);
-                temp1.push(csvData[i][5]);
-                temp.push(temp1);
-                temp.push(csvData[i][22]);
-                temp.push(csvData[i][23]);
-                heatmapData.push(temp);
-            }
-        }
-
-    temp = [];
-    for (let i = 0; i < heatmapData.length; i++) {
-        temp.push(calcTimeDiff(heatmapData[i][0]));
-        if (temp[0] > 500) {
-            heatmapData[i][0] = 0;
-            temp = [];
-            continue;
-        } else {
-            heatmapData[i][0] = temp[0];
-            temp = [];
+    for (i = 0; i < csvData.length - 1; i++) {
+        temp = [];
+        if (csvData[i][22].length > 0 && csvData[i][23].length > 0) {
+            temp.push(csvData[i][22]);
+            temp.push(csvData[i][23]);
+            heatmapData.push(temp);
         }
     }
 
-
-
-    for (var i = 0; i < heatmapData.length; i++) {
+    for (i = 0; i < heatmapData.length; i++) {
         dataPoints.push({
-            location: new google.maps.LatLng(parseFloat(heatmapData[i][1]), parseFloat(heatmapData[i][2]))
-            // the weight is based on the average dispatch time of 6 minutes (rounded down)
-            // weight: (((1 / 6) * parseFloat(heatmapData[i][0])) + 1)
+            location: new google.maps.LatLng(parseFloat(heatmapData[i][0]),
+                parseFloat(heatmapData[i][1]))
         });
     }
     return (dataPoints);
