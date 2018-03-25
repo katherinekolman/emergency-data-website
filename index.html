@@ -23,18 +23,27 @@
 
     <link rel="stylesheet" href="main.css" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 
+    <script src="jquery.js"></script>
+    <script src="parseCSV.js"></script>
+    <script src="Chart.js"></script>
+    <script src="utils.js"></script>
     <script src="googleMaps.js"></script>
     <script src="getCategoryData.js"></script>
     <script src="mostLikelyDispatch.js"></script>
-    <script src="sortByZipcode.js"></script>
-    <script src="jquery.js"></script>
-    <script src="Chart.js"></script>
     <script src="markerclusterer.js"></script>
-    <script src="parseCSV.js"></script>
+    <script src="sortByZipcode.js"></script>
+    <script src="avgDispatchData.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&libraries=visualization,places&callback=initialize"></script>
+
 </head>
 
 <body>
+
+    <script>
+    </script>
+
     <div id="container">
         <div id="background_border">
             <div id="banner">
@@ -44,6 +53,7 @@
             <script>
                 window.onload = function() {
                     showTab("emergency_prediction");
+
 
                 }
             </script>
@@ -68,22 +78,35 @@
                     <script>
                         document.getElementById("int_met_tab").addEventListener("click", function() {
                             showTab("interesting_metrics");
+                            window.scrollTo(0, 0);
                         });
                     </script>
                     <li class="tab_link" id="emer_pred_tab">Emergency Prediction</li>
                     <script>
                         document.getElementById("emer_pred_tab").addEventListener("click", function() {
                             showTab("emergency_prediction");
+                            window.scrollTo(0, 0);
                         });
                     </script>
                     <li class="tab_link" id="avg_dispatch_tab">Average Dispatch Data</li>
                     <script>
                         document.getElementById("avg_dispatch_tab").addEventListener("click", function() {
                             showTab("avg_dispatch_data");
+                            window.scrollTo(0, 0);
+                            showSlide(1);
+                            updateMap();
+                            updateChart(avgDispatchChart, getAvgDispatchTime());
                         });
                     </script>
                 </ul>
             </div>
+
+            <script>
+                function updateChart(chart, typeData) {
+                    chart.data.datasets[0].data = typeData;
+                    chart.update();
+                }
+            </script>
 
             <p id="page_description"><br /> </p>
 
@@ -102,7 +125,6 @@
                                 } else {
                                     markerCluster[index].clearMarkers();
                                 }
-
                             }
                         </script>
 
@@ -274,15 +296,15 @@
                     <script>
                         Chart.defaults.global.defaultFontFamily = "Montserrat";
                         Chart.defaults.global.defaultFontSize = 14;
-
+                        let i = 0;
                         window.onscroll = function() {
-
-                            var ele = document.getElementById("num_call_type");
                             if (document.getElementById("interesting_metrics").style.display == "block") {
                                 if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
                                     document.getElementById("avg_resol_time_description").style.transition = "opacity 2s";
                                     document.getElementById("avg_resol_time_description").style.opacity = "1";
-                                    updateChart(resolutionTimeChart, getResolutionTime());
+                                    if (i == 0) {
+                                        updateChart(resolutionTimeChart, getResolutionTime());
+                                    }
                                 }
                                 if (document.body.scrollTop > 1600 || document.documentElement.scrollTop > 1600) {
                                     document.getElementById("call_type_chart_description").style.transition = "opacity 1.5s";
@@ -291,8 +313,11 @@
                                 if (document.body.scrollTop > 2300 || document.documentElement.scrollTop > 2300) {
                                     document.getElementById("incident_times_description").style.transition = "opacity 1.5s";
                                     document.getElementById("incident_times_description").style.opacity = "1";
-                                    updateChart(incidentTimeChart, getIncidentTimeData("alarm"));
-                                    updateButton("alarm_drp_btn");
+                                    if (i == 0) {
+                                        updateChart(incidentTimeChart, getIncidentTimeData("alarm"));
+                                        updateButton("alarm_drp_btn");
+                                    }
+                                    i++;
                                 }
                             }
                         };
@@ -351,7 +376,7 @@
                                     datasets: [{
                                         data: [1061, 114, 21, 23, 10, 86, 3, 6791, 10, 129, 144, 15, 1029, 410, 55, 45, 54],
                                         backgroundColor: [
-                                            "#d7e0e9","#c3d1de", "#afc1d4", "#9bb2c9", "#87a3be", "#7394b3", "#5f84a9", "#4b759e", "#376693", "#235789",
+                                            "#d7e0e9", "#c3d1de", "#afc1d4", "#9bb2c9", "#87a3be", "#7394b3", "#5f84a9", "#4b759e", "#376693", "#235789",
                                             "#20507d", "#1d4871", "#1a4064", "#173858", "#14304b", "#10283f", "#0d2032"
                                         ]
                                     }],
@@ -518,7 +543,20 @@
                                     ]
                                 },
                                 options: {
-                                    responsive: false
+                                    responsive: false,
+                                    scaleShowValues: true,
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }],
+                                        xAxes: [{
+                                            ticks: {
+                                                autoSkip: false
+                                            }
+                                        }]
+                                    }
                                 }
                             });
                         </script>
@@ -530,49 +568,155 @@
             </div>
 
             <div class="tab_content" id="emergency_prediction">
+
+
+
                 <div id="geocode_map_border">
                     <div class="map" id="geocode_map"></div>
                 </div>
                 <div id="prediction">
-                    <p id="pred_description">Given an address and time, this attempts to predict the most likely dispatch that would be sent to that area as well as the most likely medical emergency that would occur.</p>
-                    <input type="text" autocomplete="off" placeholder="123 Main Street" required id="address_input">
-                    <input type="text" autocomplete="off" placeholder="00:00 AM/PM" required id="time_input">
+                    <p id="pred_description">Given an address and time, this attempts to predict the most likely dispatch that would be sent to that area as well as the most likely emergency that would occur.</p>
+                    <input type="text" autocomplete="off" placeholder="123 Main Street" id="address_input">
+                    <input type="text" autocomplete="off" placeholder="00:00 AM/PM" id="time_input">
                     <button id="pred_btn">Predict</button>
                     <script>
                         document.getElementById("pred_btn").addEventListener("click", findAddress);
                     </script>
-                    <p id="pred_output"></p>
+                    <div id="pred_output_container">
+                        <p id="pred_output"></p>
+                    </div>
                 </div>
             </div>
 
-            <div id="avg_dispatch_data"></div>
+            <div class="tab_content" id="avg_dispatch_data">
 
-            <!-- <canvas id="avg_dispatch_chart" width="400" height="350" style="display: block; width = 700px; height = 350px;"></canvas>
+                <canvas id="avg_dispatch_chart" width="800" height="600"></canvas>
+                <script>
+                    var avgDispatchChart = new Chart(document.getElementById("avg_dispatch_chart"), {
+                        type: 'bar',
+                        data: {
+                            datasets: [{
+                                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                                label: "Average Dispatch Time in Minutes"
+                            }],
+                            labels: ['94102', '94103', '94104', '94105', '94107', '94108', '94109', '94110', '94111', '94112', '94114',
+                                '94115', '94116', '94117', '94118', '94121', '94123', '94124', '94127', '94129', '94130', '94131',
+                                '94132', '94133', '94134', '94158'
+                            ]
+                        },
+                        options: {
+                            responsive: false,
+                            scaleShowValues: true,
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }],
+                                xAxes: [{
+                                    ticks: {
+                                        autoSkip: false
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                </script>
 
-            <div id="call_type_data">
-                <button id="alarm_button">Alarm data</button>
-                <button id="citizen_button">citizen data</button>
-                <button id="ele_haz_button">ele haz data</button>
-                <button id="ele_rescue_button">ele rescue data</button>
-                <button id="fuel_button">fuel data</button>
-                <button id="gas_button">gas data</button>
-                <button id="hazmat_button">hazmat data</button>
-                <button id="med_inc_button">med_inc data</button>
-                <button id="odor_button">odor data</button>
-                <button id="other_button">other data</button>
-                <button id="out_fire_button">out_fire data</button>
-                <button id="smoke_button">smoke data</button>
-                <button id="struct_fire_button">struct fire data</button>
-                <button id="traffic_button">traffic data</button>
-                <button id="train_button">train data</button>
-                <button id="vehicle_button">vehicle data</button>
-                <button id="water_button">water data</button>
-                <button id="resolution_button">resolution</button>
-                <button id="avg_dispatch_button">dispatch</button>
-                <button id="heatmap_data">heatmap</button>
-                <button id="init_button">init</button>
-                <button id="dipatch">yeah</button>
-            </div> -->
+                <p id="avg_dispatch_description">To the left is a graph displaying the average amount of time it takes to get to an emergency sorted by zipcode. The zipcode with the longest dispatch time is 94130, followed by 94131 and 94105. These are Treasure Island, the Twin Peaks
+                    area, and the Rincon Hill area respectively.
+                </p>
+
+                <div id="slideshow">
+                    <script>
+                        var slideNum = 1;
+
+                        function incSlideNum(n) {
+                            showSlide(slideNum += n);
+                        }
+
+                        function showSlide(n) {
+                            var i;
+                            var x = document.getElementsByClassName("slide_content");
+                            if (n > x.length) {
+                                slideNum = 1
+                            }
+                            if (n < 1) {
+                                slideNum = x.length
+                            }
+                            for (i = 0; i < x.length; i++) {
+                                x[i].style.display = "none";
+                            }
+                            x[slideNum - 1].style.display = "block";
+                        }
+                    </script>
+
+                    <button class="slide_btn" id="slide_left_btn">&#10094;</button>
+
+                    <div id="slide">
+                        <div class="slide_content" id="treasure_island">
+                            <img id="zip94130" src="images/zip94130.png" />
+                            <span><em>Zipcode 94130</em></span>
+                            <p>Treasure Island only has one fire station located on the northern part of the island, and is connected to the San Francisco only by the Oakland Bay Bridge. For small emergencies, one fire station may be sufficient, but for
+                                bigger emergencies, having to call in other stations off the island would explain why dispatch times would be bigger.
+                            </p>
+                        </div>
+                        <div class="slide_content" id="twin_peaks">
+                            <img id="zip94131" src="images/zip94131.png" />
+                            <span><em>Zipcode 94131</em></span>
+                            <p>The Twin Peaks area has no fire stations located in their zipcode district, but there are a few on the outskirts. This could be a major reason that the dispatch times are longer in this area. Another reason could be the terrain;
+                                the hills and difficult terrain would make it difficult for emergency vehicles to get to locations quickly.
+                            </p>
+                        </div>
+                        <div class="slide_content" id="rincon_hill">
+                            <img id="zip94105" src="images/zip94105.png" />
+                            <span><em>Zipcode 94105</em></span>
+                            <p>The Rincon Hill area is located right off the connection of San Francisco and the Oakland Bay Bridge with two fire stations. It is a densely populated area of the city. Because of the sheer size of the population there, more
+                                emergency calls would occur in that area, as well as generate large amounts of traffic, which would explain why dispatch times are longer here.
+                            </p>
+                        </div>
+                    </div>
+
+                    <button class="slide_btn" id="slide_right_btn">&#10095;</button>
+                    <script>
+                        document.getElementById("slide_left_btn").addEventListener("click", function() {
+                            incSlideNum(-1);
+                        });
+                        document.getElementById("slide_right_btn").addEventListener("click", function() {
+                            incSlideNum(1);
+                        })
+                    </script>
+
+                </div>
+
+
+
+
+
+
+                <div id="time_reduce">
+
+
+                    <span id="reduce_header">How can dispatch times be <strong>reduced</strong>?</span>
+
+                    <div id="reduce_description">
+                        <p>
+                            The most obvious solution for improving dispatch times would be creating more stations around the city, especially in denser parts of the city such as the downtown area. However, other solutions may lie in improving traffic flows across the city so that
+                            emergency vehicles can get to places more rapidly or creating more access points to locations by building more roads. <br /></p>
+                        <p>
+                            To the right, a heatmap of all incidents is shown. It's clear that most of the emergencies occur in the downtown region of San Francisco, so while it's important to have enough stations there to service the massive population in that region, it's also
+                            important not to neglect the outer regions as there is still a need for strong dispatch centers, indicated by the pockets of activity on the heatmap outside of the downtown area.</p>
+                    </div>
+
+                    <div id="avg_dispatch_heatmap_border">
+                        <div id="avg_dispatch_heatmap"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
 
             <div id="bottom_bar">
                 <a href="https://github.com/katherinekolman/emergency-data-website" target="_blank">
@@ -591,27 +735,16 @@
 
 
 
+
     <!-- FIXME add a banner at bottom, link github page -->
 
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0cYEpHgp2dpM4w6ZMp8nlMHX5i1fA2xg&libraries=visualization,places&callback=initialize"></script>
+
 
     <script>
         // //FIXME reformat this
 
-
-        document.getElementById("avg_dispatch_button").addEventListener("click", getHeatmapData);
-
-
-
-
-
-
-
-
-
         //FIXME move this to a better location
-
 
         function updateButton(id) {
             document.getElementById("inc_times_drp_btn").innerHTML = document.getElementById(id).innerHTML;
@@ -624,94 +757,8 @@
         // google maps variables
 
 
-        function updateChart(chart, typeData) {
-            chart.data.datasets[0].data = typeData;
-            chart.update();
-        }
 
-        // the chart containing the number of all of the different types of incidents
 
-        // new Chart(document.getElementById("call_type_chart_canvas"), {
-        //     type: 'doughnut',
-        //     data: {
-        //         datasets: [{
-        //             data: [1061, 114, 21, 23, 10, 86, 3, 6791, 10, 129, 144, 15, 1029, 410, 55, 45, 54]
-        //         }],
-        //
-        //         labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
-        //             'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
-        //             'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
-        //             'Vehicle Fire', 'Water Rescue'
-        //         ]
-        //     },
-        //     options: {
-        //         responsive: false
-        //     }
-        // });
-
-        // var resolutionTimeChart = new Chart(document.getElementById("resolution_time_chart"), {
-        //     type: 'bar',
-        //     data: {
-        //         datasets: [{ //FIXME call updateChart on page load to update this data
-        //             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        //         }],
-        //
-        //         labels: ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
-        //             'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
-        //             'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
-        //             'Vehicle Fire', 'Water Rescue'
-        //         ]
-        //     },
-        //     options: {
-        //         responsive: false,
-        //         scaleShowValues: true,
-        //         scales: {
-        //             yAxes: [{
-        //                 ticks: {
-        //                     beginAtZero: true
-        //                 }
-        //             }],
-        //             xAxes: [{
-        //                 ticks: {
-        //                     autoSkip: false
-        //                 }
-        //             }]
-        //         }
-        //     }
-        // });
-
-        // var incidentTimeChart = new Chart(document.getElementById("incident_time_chart"), {
-        //     type: 'line',
-        //     data: {
-        //         datasets: [{
-        //             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        //             label: "Number of Occurences"
-        //         }],
-        //         labels: ['12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM',
-        //             '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'
-        //         ]
-        //     },
-        //     options: {
-        //         responsive: false
-        //     }
-        // });
-
-        var avgDispatchChart = new Chart(document.getElementById("avg_dispatch_chart"), {
-            type: 'bar',
-            data: {
-                datasets: [{
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    label: "Average Dispatch Time"
-                }],
-                labels: ['94102', '94103', '94104', '94105', '94107', '94108', '94109', '94110', '94111', '94112', '94114',
-                    '94115', '94116', '94117', '94118', '94121', '94123', '94124', '94127', '94129', '94130', '94131',
-                    '94132', '94133', '94134', '94158'
-                ]
-            },
-            options: {
-                responsive: false
-            }
-        })
 
         /* This function gets the number of occurences of a incident type and sorts it
          * by time of day within hour long intervals starting at the half-hour mark (for
@@ -804,40 +851,10 @@
             return resolutionData;
         }
 
-        function average(data) {
-            var sum = 0;
-            for (let i = 0; i < data.length; i++) {
-                sum += parseInt(data[i]);
-            }
-            return Math.round(sum / data.length);
-        }
-
-
-        function calcTimeDiff(data) {
-            var hourA = data[0].split(" ")[1].split(/:| /)[0];
-            var minuteA = data[0].split(" ")[1].split(/:| /)[1];
-
-            var hourB = data[1].split(" ")[1].split(/:| /)[0];
-            var minuteB = data[1].split(" ")[1].split(/:| /)[1];
-
-            if (hourA == hourB) {
-                return minuteB - minuteA;
-            } else {
-                if (hourA > hourB) {
-                    hourA -= 12;
-                    hourB += 12;
-                    if (minuteA < minuteB) {
-                        return minuteB - minuteA + (hourB - hourA) * 60;
-                    }
-                }
-                minuteA = 60 - minuteA;
-                hourA = hourB - hourA - 1;
-                return minuteA + hourA * 60;
-            }
-        }
-
         function getAvgDispatchTime() {
             avgDispatch = [];
+
+
 
             let temp = [];
             let temp1 = [];
@@ -854,6 +871,8 @@
                 }
             }
 
+
+
             temp = [];
             for (let i = 0; i < avgDispatch.length; i++) {
                 temp.push(calcTimeDiff(avgDispatch[i][0]));
@@ -867,9 +886,10 @@
                 }
             }
 
+
+
             avgDispatch = sortByZipcode(avgDispatch);
 
-            console.log(avgDispatch);
 
             return avgDispatch;
         }
@@ -879,59 +899,61 @@
         /* This function returns all of the locations of all incidents and weights them according to
          * their dispatch time. Longer dispatch times will have greater weights.
          */
-        function getHeatmapData() {
-            var heatmapData = [];
-            var dataPoints = [];
-
-            let temp = [];
-            let temp1 = [];
-
-            loop1:
-                for (let i = 0; i < csvData.length - 1; i++) {
-                    temp = [];
-                    temp1 = [];
-                    if (csvData[i][3].length > 0 && csvData[i][5].length > 0 && csvData[i][21].length > 0 &&
-                        csvData[i][22].length > 0 && csvData[i][23].length > 0) {
-
-                        // loop2:
-                        // for (let j = 0; j < heatmapData.length; j++) {
-                        //     if (heatmapData[j][1].includes(csvData[i][22]) && heatmapData[j][2].includes(csvData[i][23])) {
-                        //         continue loop1;
-                        //     }
-                        // }
-
-                        temp1.push(csvData[i][3]);
-                        temp1.push(csvData[i][5]);
-                        temp.push(temp1);
-                        temp.push(csvData[i][22]);
-                        temp.push(csvData[i][23]);
-                        heatmapData.push(temp);
-                    }
-                }
-
-            temp = [];
-            for (let i = 0; i < heatmapData.length; i++) {
-                temp.push(calcTimeDiff(heatmapData[i][0]));
-                if (temp[0] > 500) {
-                    heatmapData[i][0] = 0;
-                    temp = [];
-                    continue;
-                } else {
-                    heatmapData[i][0] = temp[0];
-                    temp = [];
-                }
-            }
-
-            for (var i = 0; i < heatmapData.length; i++) {
-                dataPoints.push({
-                    location: new google.maps.LatLng(parseFloat(heatmapData[i][1]), parseFloat(heatmapData[i][2])),
-                    // the weight is based on the largest dispatch time (64 min), so the ranges of weights will be 1 - 5.
-                    weight: (((1 / 16) * parseFloat(heatmapData[i][0])) + 1)
-                });
-            }
-            return (dataPoints);
-        }
+        // function getHeatmapData() {
+        //     var heatmapData = [];
+        //     var dataPoints = [];
+        //
+        //     let temp = [];
+        //     let temp1 = [];
+        //
+        //         for (let i = 0; i < csvData.length - 1; i++) {
+        //             temp = [];
+        //             temp1 = [];
+        //             if (csvData[i][3].length > 0 && csvData[i][5].length > 0 && csvData[i][21].length > 0 &&
+        //                 csvData[i][22].length > 0 && csvData[i][23].length > 0) {
+        //
+        //                 // loop2:
+        //                 // for (let j = 0; j < heatmapData.length; j++) {
+        //                 //     if (heatmapData[j][1].includes(csvData[i][22]) && heatmapData[j][2].includes(csvData[i][23])) {
+        //                 //         continue loop1;
+        //                 //     }
+        //                 // }
+        //
+        //                 temp1.push(csvData[i][3]);
+        //                 temp1.push(csvData[i][5]);
+        //                 temp.push(temp1);
+        //                 temp.push(csvData[i][22]);
+        //                 temp.push(csvData[i][23]);
+        //                 heatmapData.push(temp);
+        //             }
+        //         }
+        //
+        //
+        //
+        //     temp = [];
+        //     for (let i = 0; i < heatmapData.length; i++) {
+        //         temp.push(calcTimeDiff(heatmapData[i][0]));
+        //         if (temp[0] > 500) {
+        //             heatmapData[i][0] = 0;
+        //             temp = [];
+        //             continue;
+        //         } else {
+        //             heatmapData[i][0] = temp[0];
+        //             temp = [];
+        //         }
+        //     }
+        //
+        //     for (var i = 0; i < heatmapData.length; i++) {
+        //         dataPoints.push({
+        //             location: new google.maps.LatLng(parseFloat(heatmapData[i][1]), parseFloat(heatmapData[i][2])),
+        //             // the weight is based on the largest dispatch time (64 min), so the ranges of weights will be 1 - 5.
+        //             weight: (((1 / 16) * parseFloat(heatmapData[i][0])) + 1)
+        //         });
+        //     }
+        //     return (dataPoints);
+        // }
     </script>
+
 </body>
 
 </html>

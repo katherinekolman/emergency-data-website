@@ -1,13 +1,16 @@
 // gets the location of incidents of each call type
+var callTypes = ['Alarms', 'Citizen Assist / Service Call', 'Electrical Hazard', 'Elevator / Escalator Rescue', 'Fuel Spill',
+    'Gas Leak (Natural and LP Gases)', 'HazMat', 'Medical Incident', 'Odor (Strange / Unknown)', 'Other',
+    'Outside Fire', 'Smoke Investigation (Outside)', 'Structure Fire', 'Traffic Collision', 'Train / Rail Incident',
+    'Vehicle Fire', 'Water Rescue'
+];
+
 function getCategoryData(csvData, type) {
     var temp = [];
     var locData = [];
 
-    console.log(type);
-
     switch (type) {
         case "alarm":
-            console.log(csvData.length);
             for (var i = 0; i < csvData.length; i++) {
                 if (csvData[i][0] == "Alarms") {
                     temp.push(csvData[i][22]); // latitude
@@ -198,8 +201,6 @@ function getCategoryData(csvData, type) {
             alert("error");
             break;
     }
-
-    console.log(locData);
 
     return locData;
 }

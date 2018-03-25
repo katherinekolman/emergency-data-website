@@ -121,9 +121,10 @@ function searchTime(addressData) {
         timeOfDay = time[2].toUpperCase();
 
         if (((hour == 0 || hour == 00) && timeOfDay == "AM") ||
-            (hour < 12 && timeOfDay == "PM")) {
+            ((hour > 0 && hour < 12) && timeOfDay == "PM")) {
             hour = 12 + hour;
-        } else if (hour > 23 || hour < 0 || timeOfDay.length > 2 || (timeOfDay == "AM" && hour > 12)) {
+        } else if (hour > 23 || hour < 0 || timeOfDay.length > 2 || (timeOfDay == "AM" && hour > 12) || (timeOfDay == "PM" && hour == 0) || (timeOfDay != "AM" && timeOfDay != "PM")
+                    || min > 59 || min < 0) {
             document.getElementById("pred_output").innerHTML = "Please give a valid time.";
             return;
         }

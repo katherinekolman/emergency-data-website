@@ -1,127 +1,100 @@
+
+
 function sortByZipcode(data) {
     var zipcodeData = [];
-    var sum = [];
 
     for (let i = 0; i < 27; i++) {
-        zipcodeData[i] = 0;
-        sum[i] = 0;
+        zipcodeData[i] = [];
     }
 
     for (let i = 0; i < data.length; i++) {
         switch (data[i][1]) {
             case "94102":
-                zipcodeData[0] += data[i][0];
-                sum[0]++;
+                zipcodeData[0].push(data[i][0]);
                 break;
             case "94103":
-                zipcodeData[1] += data[i][0];
-                sum[1]++;
+                zipcodeData[1].push(data[i][0]);
                 break;
             case "94104":
-                zipcodeData[2] += data[i][0];
-                sum[2]++;
+                zipcodeData[2].push(data[i][0]);
                 break;
             case "94105":
-                zipcodeData[3] += data[i][0];
-                sum[3]++;
+                zipcodeData[3].push(data[i][0]);
                 break;
             case "94107":
-                zipcodeData[4] += data[i][0];
-                sum[4]++;
+                zipcodeData[4].push(data[i][0]);
                 break;
             case "94108":
-                zipcodeData[5] += data[i][0];
-                sum[5]++;
+                zipcodeData[5].push(data[i][0]);
                 break;
             case "94109":
-                zipcodeData[6] += data[i][0];
-                sum[6]++;
+                zipcodeData[6].push(data[i][0]);
                 break;
             case "94110":
-                zipcodeData[7] += data[i][0];
-                sum[7]++;
+                zipcodeData[7].push(data[i][0]);
                 break;
             case "94111":
-                zipcodeData[8] += data[i][0];
-                sum[8]++;
+                zipcodeData[8].push(data[i][0]);
                 break;
             case "94112":
-                zipcodeData[9] += data[i][0];
-                sum[9]++;
+                zipcodeData[9].push(data[i][0]);
                 break;
             case "94114":
-                zipcodeData[10] += data[i][0];
-                sum[10]++;
+                zipcodeData[10].push(data[i][0]);
                 break;
             case "94115":
-                zipcodeData[11] += data[i][0];
-                sum[11]++;
+                zipcodeData[11].push(data[i][0]);
                 break;
             case "94116":
-                zipcodeData[12] += data[i][0];
-                sum[12]++;
+                zipcodeData[12].push(data[i][0]);
                 break;
             case "94117":
-                zipcodeData[13] += data[i][0];
-                sum[13]++;
+                zipcodeData[13].push(data[i][0]);
                 break;
             case "94118":
-                zipcodeData[14] += data[i][0];
-                sum[14]++;
+                zipcodeData[14].push(data[i][0]);
                 break;
             case "94121":
-                zipcodeData[15] += data[i][0];
-                sum[15]++;
+                zipcodeData[15].push(data[i][0]);
                 break;
             case "94122":
-                zipcodeData[16] += data[i][0];
-                sum[16]++;
+                zipcodeData[16].push(data[i][0]);
                 break;
             case "94123":
-                zipcodeData[17] += data[i][0];
-                sum[17]++;
+                zipcodeData[17].push(data[i][0]);
                 break;
             case "94124":
-                zipcodeData[18] += data[i][0];
-                sum[18]++;
+                zipcodeData[18].push(data[i][0]);
                 break;
             case "94127":
-                zipcodeData[19] += data[i][0];
-                sum[19]++;
+                zipcodeData[19].push(data[i][0]);
                 break;
             case "94129":
-                zipcodeData[20] += data[i][0];
-                sum[20]++;
+                zipcodeData[20].push(data[i][0]);
                 break;
             case "94130":
-                zipcodeData[21] += data[i][0];
-                sum[21]++;
+                zipcodeData[21].push(data[i][0]);
                 break;
             case "94131":
-                zipcodeData[22] += data[i][0];
-                sum[22]++;
+                zipcodeData[22].push(data[i][0]);
                 break;
             case "94132":
-                zipcodeData[23] += data[i][0];
-                sum[23]++;
+                zipcodeData[23].push(data[i][0]);
                 break;
             case "94133":
-                zipcodeData[24] += data[i][0];
-                sum[24]++;
+                zipcodeData[24].push(data[i][0]);
                 break;
             case "94134":
-                zipcodeData[25] += data[i][0];
-                sum[25]++;
+                zipcodeData[25].push(data[i][0]);
                 break;
             case "94158":
-                zipcodeData[26] += data[i][0];
-                sum[26]++;
+                zipcodeData[26].push(data[i][0]);
                 break;
         }
     }
 
-    for (let i = 0; i < zipcodeData.length; i++) {
-        zipcodeData[i] = zipcodeData[i] / sum[i];
+    for (let i= 0; i < zipcodeData.length; i++) {
+        zipcodeData[i] = average(zipcodeData[i]);
     }
 
     return zipcodeData;

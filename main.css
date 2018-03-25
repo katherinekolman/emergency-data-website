@@ -1,5 +1,6 @@
 body {
-    /*background-color: #dedcdb;*/ /*#7ea89d;*/
+    /*background-color: #dedcdb;*/
+    /*#7ea89d;*/
     /*background: linear-gradient(#bce0df, #4A8DC1);*/
     font-family: "Montserrat", sans-serif;
     min-height: 100%;
@@ -34,13 +35,12 @@ li {
     text-align: center;
 }
 
-
 #nav_bar {
     font-size: 25px;
     background-color: #5B98C7;
     position: sticky;
     top: -2px;
-    z-index: 5000;
+    z-index: 50000;
     padding-top: 20px;
     padding-bottom: 25px;
     box-shadow: 0px 5px 20px #888;
@@ -70,6 +70,10 @@ li {
     display: block;
 }
 
+#interesting_metrics {
+    display: none;
+}
+
 #bottom_image {
     position: relative;
     bottom: 0;
@@ -78,11 +82,9 @@ li {
     margin-bottom: -9px;
     margin-right: -8px;
     margin-top: -15px;*/
-
     margin: -10px -8px -9px -10px;
     overflow: hidden;
 }
-
 
 #background_border {
     margin: 75px 70px 10px 70px;
@@ -146,39 +148,38 @@ label {
     display: none;
 }
 
-.checkbox + label:hover {
+.checkbox+label:hover {
     cursor: pointer;
 }
 
-.checkbox + label {
+.checkbox+label {
     background-color: #fafafa;
-	border: 1px solid #cacece;
-	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
-	padding: 11px;
-	border-radius: 3px;
-	display: inline-block;
-	position: relative;
+    border: 1px solid #cacece;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 11px;
+    border-radius: 3px;
+    display: inline-block;
+    position: relative;
 }
 
-.checkbox + label:active, .checkbox:checked + label:active {
-	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+.checkbox+label:active, .checkbox:checked+label:active {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-
-.checkbox:checked + label {
-	background-color: #e9ecee;
-	border: 1px solid #adb8c0;
-	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
-	color: #99a1a7;
+.checkbox:checked+label {
+    background-color: #e9ecee;
+    border: 1px solid #adb8c0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
+    color: #99a1a7;
 }
 
-.checkbox:checked + label:after {
-	content: '\2714';
-	font-size: 23px;
-	position: absolute;
+.checkbox:checked+label:after {
+    content: '\2714';
+    font-size: 23px;
+    position: absolute;
     top: -10px;
-	left: 2px;
-	color: #99a1a7;
+    left: 2px;
+    color: #99a1a7;
 }
 
 #bottom_bar {
@@ -188,6 +189,7 @@ label {
     width: 100%;
     line-height: 70px;
     height: 70px;
+    bottom: 0;
 }
 
 #bottom_bar img {
@@ -220,6 +222,13 @@ label {
     float: left;
     border: 2px solid #bbb;
 }
+#emergency_prediction {
+    position: relative;
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
 
 #prediction {
     display: inline-block;
@@ -229,6 +238,7 @@ label {
     position: relative;
     right: 200px;
 }
+
 
 #pred_description {
     text-align: center;
@@ -247,11 +257,12 @@ label {
 #map {
     position: relative;
     top: 22px;
-    left: 18px;
+    left: 16px;
     height: 782px;
     width: 1100px;
     border: 1px solid #CCCCCC;
     display: inline-block;
+    z-index: 10000;
 }
 
 #map_border {
@@ -327,7 +338,6 @@ label {
     margin-bottom: -10px;
 }
 
-
 #incident_times {
     display: inline-block;
     position: relative;
@@ -364,7 +374,7 @@ label {
     background-color: #4A8DC1;
     color: white;
     padding: 10px;
-    font-size:  16px;
+    font-size: 16px;
     border: none;
     width: 150px;
     position: absolute;
@@ -457,7 +467,6 @@ input {
     background-color: #5B98C7;
     font-size: 20px;
     width: 200px;
-
 }
 
 #pred_btn:hover {
@@ -466,9 +475,161 @@ input {
     cursor: pointer;
 }
 
+#pred_output_container {
+    background-color: #eee;
+    border-radius: 5px;
+    position: relative;
+    width: 700px;
+    height: 120px;
+}
+
 #pred_output {
     font-family: inherit;
     font-size: 20px;
+    position: relative;
+    line-height: 180%;
+}
+
+#avg_dispatch_chart {
+    display: block;
+    width: 800px;
+    height: 600px;
+    position: relative;
+    float: left;
+    left: 75px;
+}
+
+#avg_dispatch_description {
+    display: inline-block;
+    width: 650px;
+    height: 500px;
+    position: relative;
+    left: 150px;
+    top:  0px;
+    margin-bottom: 100px;
+    font-size: 30px;
+    line-height: 250%;
+}
+
+
+
+.slideshow {
+    margin-bottom: 100px;
+}
+
+#treasure_island, #rincon_hill, #twin_peaks {
+    display: none;
+}
+
+#treasure_island img, #rincon_hill img, #twin_peaks img {
+    width: 344px;
+    height: 328px;
+    position: relative;
+    float: left;
+    display: inline-block;
+    top: 100px;
+    left: 50px;
+    border: 5px solid #ddd;
+}
+
+#treasure_island p, #rincon_hill p, #twin_peaks p {
+    display: inline-block;
+    width: 600px;
+    height: 500px;
+    position: relative;
+    right: 75px;
+    top: 40px;
+    float: right;
+    font-size: 25px;
+    line-height: 200%;
+}
+
+#treasure_island span, #rincon_hill span, #twin_peaks span {
+    position: relative;
+    top: 450px;
+    left: -180px;
+}
+
+#slide {
+    position: relative;
+    width: 1200px;
+    height: 600px;
+    margin: auto;
+    background-color: inherit;
+    margin-bottom: 50px;
+}
+
+
+.slide_btn {
+    display: inline-block;
+    z-index: 100;
+    cursor: pointer;
+    border: none;
+    font-size: 50px;
+    background-color: inherit;
+}
+
+
+#slide_right_btn {
+    position: relative;
+    float: right;
+    top: -375px;
+    right: 150px;
+}
+
+#slide_left_btn {
+    float: left;
+    position: relative;
+    top: 225px;
+    left: 140px;
+}
+
+#time_reduce {
+    margin-bottom: 50px;
+    width: 100%;
+    position: relative;
+}
+
+#reduce_header {
+    font-size: 40px;
+    position: relative;
+    left: 75px;
+}
+
+#reduce_header strong {
+    color: #5B98C7;
+}
+
+
+#reduce_description {
+    position: relative;
+    left: 75px;
+    font-size: 22px;
+    line-height: 220%;
+    width: 800px;
+    top: 40px;
+    right: 1000px;
+}
+
+#avg_dispatch_heatmap {
+    height: 100%;
+    height: 550px;
+    width: 500px;
+    position: relative;
+    margin: auto;
+    top: 25px;
+    border: 2px solid #bbb;
+}
+
+#avg_dispatch_heatmap_border {
+    position: absolute;
+    height: 600px;
+    width: 550px;
+    background-color: #ddd;
+    border: 2px solid #bbb;
+    margin: auto;
+    left:  1000px;
+    top: 100px;
 }
 
 #page_title {
