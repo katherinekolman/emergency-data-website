@@ -155,8 +155,8 @@ function searchTime(addressData) {
         temp = [];
         temp = time[1].split(":");
 
-        k = .5;
-        while (k < 3) { // checks for the nearest times within a certain interval (initially within one hour range)
+        k = 0.5;
+        while (k < 12.5) { // checks for the nearest times within a certain interval (initially within two hour range)
             if (temp[0] > hour - k && temp[0] < hour + k) {
                 nearestTimes.push(addressData[i]);
             }
@@ -164,7 +164,7 @@ function searchTime(addressData) {
             if (nearestTimes.length > 0) { // if there were results
                 break;
             } else { // increase time search interval
-                k += 1;
+                k+= 0.5;
             }
         }
     }
