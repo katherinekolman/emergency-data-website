@@ -16,6 +16,20 @@ button {
     font-family: inherit;
 }
 
+#background_border {
+    margin: 75px 70px 10px 70px;
+    background: linear-gradient(#eee, #fff);
+    border-radius: 10px;
+    position: relative;
+}
+
+#page_title {
+    text-align: center;
+    font-size: 50px;
+}
+
+/* Nav bar */
+
 #nav_bar {
     position: sticky;
     width: 1500px;
@@ -55,47 +69,35 @@ button {
     display: none;
 }
 
+/* Metrics / Trends Tab */
+
 #metrics {
     display: block;
-}
-
-#bottom_image {
-    position: relative;
-    bottom: 0;
-    left: 0;
-    margin: -10px -8px -9px -10px;
-    overflow: hidden;
-}
-
-#background_border {
-    margin: 75px 70px 10px 70px;
-    background: linear-gradient(#eee, #fff);
-    border-radius: 10px;
 }
 
 .map {
     height: 100%;
 }
 
-#marker_map {
-    display: inline-block;
-    position: relative;
-    width: 1100px;
-    height: 782px;
-    top: 22px;
-    left: 16px;
-    z-index: 999;
-    border: 1px solid #CCCCCC;
-}
-
 #marker_map_border {
     position: relative;
     width: 1450px;
-    height: 828px;
+    height: 790px;
     margin: auto;
     margin-bottom: 150px;
     background-color: #ddd;
     border: 2px solid #ccc;
+}
+
+#marker_map {
+    display: inline-block;
+    position: absolute;
+    width: 76%;
+    height: 94%;
+    left: 320px;
+    top: 23px;
+    z-index: 999;
+    border: 1px solid #CCCCCC;
 }
 
 #marker_map_label {
@@ -107,7 +109,7 @@ button {
     left: 24px;
     z-index: 998;
     padding: 10px;
-    padding-left: 25px;
+    padding-left: 22px;
     padding-right: 23px;
     background-color: #5B98C7;
     color: white;
@@ -132,16 +134,16 @@ button {
 #checkboxes {
     position: absolute;
     left: 10px;
-    top: 10px;
-    line-height: 272%;
+    top: 50px;
+    line-height: 257%;
 }
 
 #checkbox_labels {
     position: absolute;
-    top: 4px;
+    top: 45px;
     left: 40px;
     font-size: 15px;
-    line-height: 290%;
+    line-height: 274%;
     width: 250px;
 }
 
@@ -158,13 +160,13 @@ label {
 }
 
 .checkbox + label {
-    background-color: #fafafa;
-    border: 1px solid #cacece;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
-    padding: 11px;
-    border-radius: 3px;
     display: inline-block;
     position: relative;
+    background-color: #fafafa;
+    padding: 11px;
+    border: 1px solid #cacece;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
 }
 
 .checkbox + label:active, .checkbox:checked + label:active {
@@ -173,89 +175,19 @@ label {
 
 .checkbox:checked + label {
     background-color: #e9ecee;
+    color: #99a1a7;
     border: 1px solid #adb8c0;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
-    color: #99a1a7;
 }
 
 .checkbox:checked + label:after {
-    content: '\2714';
-    font-size: 23px;
     position: absolute;
     top: -10px;
     left: 2px;
+    font-size: 23px;
+    content: '\2714';
     color: #99a1a7;
 }
-
-#bottom_bar {
-    text-align: center;
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    line-height: 70px;
-    height: 70px;
-    bottom: 0;
-}
-
-#bottom_bar img {
-    width: 32px;
-    height: 32px;
-    position: relative;
-    top: 8px;
-}
-
-
-#geocode_map {
-    height: 100%;
-    height: 500px;
-    width: 500px;
-    position: relative;
-    margin: auto;
-    top: 15px;
-    border: 2px solid #ccc;
-}
-
-#geocode_map_border {
-    height: 530px;
-    width: 530px;
-    left: 100px;
-    background: #ddd;
-    position: relative;
-    float: left;
-    border: 2px solid #bbb;
-}
-#emergency_prediction {
-    position: relative;
-    display: none;
-    width: 100%;
-    height: 100%;
-}
-
-
-#prediction {
-    display: inline-block;
-    text-align: center;
-    width: 700px;
-    float: right;
-    position: relative;
-    right: 200px;
-}
-
-
-#pred_para {
-    text-align: center;
-    position: relative;
-    margin-bottom: 100px;
-    font-size: 26px;
-    line-height: 150%;
-    animation: fadein 2s;
-}
-
-@keyframes fadein {
-    from {opacity: 0;}
-    to {opacity: 1;}
-}
-
 
 #avg_resol_time {
     position: relative;
@@ -264,12 +196,12 @@ label {
 
 #resolution_time_chart {
     display: inline-block;
+    position: relative;
     width: 800px;
     height: 650px;
-    position: relative;
     left: 80px;
-    float: left;
     top: 70px;
+    float: left;
 }
 
 #avg_resol_time_para {
@@ -337,56 +269,56 @@ label {
 }
 
 #incident_times_para {
-    float: right;
     position: relative;
+    float: right;
     font-size: 28px;
+    top: 50px;
     width: 600px;
     left: 200px;
     line-height: 200%;
     opacity: 0;
-    top: 50px;
 }
 
 #inc_times_drp {
-    position: absolute;
     display: inline-block;
+    position: absolute;
 }
 
 #inc_times_drp_btn {
-    background-color: #4A8DC1;
-    color: white;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    width: 150px;
     position: absolute;
+    width: 150px;
     right: 540px;
     bottom: -125px;
+    padding: 10px;
+    background-color: #4A8DC1;
+    color: white;
+    border: none;
+    font-size: 16px;
 }
 
 #inc_times_drp_btn_content {
     display: none;
-    list-style: none;
     position: absolute;
-    right: 433px;
-    top: 125px;
-    text-align: left;
     width: 255px;
+    max-height: 400px;
+    top: 125px;
+    right: 433px;
+    text-align: left;
     background-color: #ddd;
     border: 1px solid #ccc;
-    max-height: 400px;
+    list-style: none;
     overflow-y: auto;
 }
 
 #inc_times_drp_btn_content li {
-    list-style: none;
+    display: block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: -20px;
     color: black;
     text-decoration: none;
-    display: block;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    margin-left: -20px;
     text-align: left;
+    list-style: none;
 }
 
 #inc_times_drp_btn_content li:hover {
@@ -398,10 +330,57 @@ label {
     display: block;
 }
 
-.clearfix::after {
-    content: "";
-    clear: both;
-    display: table;
+/* Emergency Prediction tab */
+
+#geocode_map {
+    height: 100%;
+    height: 500px;
+    width: 500px;
+    position: relative;
+    margin: auto;
+    top: 15px;
+    border: 2px solid #ccc;
+}
+
+#geocode_map_border {
+    height: 530px;
+    width: 530px;
+    left: 100px;
+    background: #ddd;
+    position: relative;
+    float: left;
+    border: 2px solid #bbb;
+}
+
+#emergency_prediction {
+    position: relative;
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+#prediction {
+    display: inline-block;
+    text-align: center;
+    width: 700px;
+    float: right;
+    position: relative;
+    right: 200px;
+}
+
+
+#pred_para {
+    text-align: center;
+    position: relative;
+    margin-bottom: 100px;
+    font-size: 26px;
+    line-height: 150%;
+    animation: fadein 2s;
+}
+
+@keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
 }
 
 input {
@@ -412,26 +391,26 @@ input {
 #address_input {
     display: inline-block;
     position: relative;
-    margin-bottom: 10px;
+    width: 450px;
     top: -50px;
     left: 0px;
     padding: 10px;
-    font-size: 20px;
-    width: 450px;
-    border: 2px solid #ccc;
+    margin-bottom: 10px;
     transition: 0.5s;
+    font-size: 20px;
+    border: 2px solid #ccc;
 }
 
 #time_input {
     display: inline-block;
     position: relative;
     width: 150px;
-    border: 2px solid #ccc;
-    transition: 0.5s;
-    font-size: 20px;
-    padding: 10px;
-    bottom: 50px;
     left: 0px;
+    bottom: 50px;
+    padding: 10px;
+    transition: 0.5s;
+    border: 2px solid #ccc;
+    font-size: 20px;
 }
 
 #time_input:focus, #address_input:focus {
@@ -440,15 +419,15 @@ input {
 
 #pred_btn {
     position: relative;
+    width: 200px;
     top: -25px;
     border: 2px solid #5B98C7;
     transition: 0.5s;
     padding: 10px;
-    font-family: inherit;
-    color: white;
     background-color: #5B98C7;
+    color: white;
+    font-family: inherit;
     font-size: 20px;
-    width: 200px;
 }
 
 #pred_btn:hover {
@@ -458,36 +437,38 @@ input {
 }
 
 #pred_output_container {
-    background-color: #eee;
-    border-radius: 5px;
     position: relative;
     width: 700px;
     height: 120px;
+    background-color: #eee;
+    border-radius: 5px;
 }
 
 #pred_output {
+    position: relative;
     font-family: inherit;
     font-size: 20px;
-    position: relative;
     line-height: 180%;
 }
 
+/* Average Dispatch Data tab */
+
 #avg_dispatch_chart {
     display: block;
+    position: relative;
     width: 800px;
     height: 600px;
-    position: relative;
     float: left;
     left: 75px;
 }
 
 #avg_dispatch_para {
     display: inline-block;
+    position: relative;
     width: 650px;
     height: 500px;
-    position: relative;
-    left: 150px;
     top:  0px;
+    left: 150px;
     margin-bottom: 100px;
     font-size: 30px;
     line-height: 250%;
@@ -502,11 +483,11 @@ input {
 }
 
 #treasure_island img, #rincon_hill img, #twin_peaks img {
+    display: inline-block;
+    position: relative;
     width: 344px;
     height: 328px;
-    position: relative;
     float: left;
-    display: inline-block;
     top: 100px;
     left: 50px;
     border: 5px solid #ddd;
@@ -514,24 +495,24 @@ input {
 
 #rincon_hill p, #twin_peaks p {
     display: inline-block;
+    position: relative;
     width: 600px;
     height: 500px;
-    position: relative;
-    right: 75px;
-    top: 40px;
     float: right;
+    top: 40px;
+    right: 75px;
     font-size: 25px;
     line-height: 200%;
 }
 
 #treasure_island p {
     display: inline-block;
+    position: relative;
     width: 600px;
     height: 500px;
-    position: relative;
-    right: 75px;
-    top: 20px;
     float: right;
+    top: 20px;
+    right: 75px;
     font-size: 23px;
     line-height: 180%;
 }
@@ -547,20 +528,25 @@ input {
     width: 1200px;
     height: 600px;
     margin: auto;
-    background-color: inherit;
     margin-bottom: 50px;
+    background-color: inherit;
 }
-
 
 .slide_btn {
     display: inline-block;
     z-index: 100;
     cursor: pointer;
+    background-color: inherit;
     border: none;
     font-size: 50px;
-    background-color: inherit;
 }
 
+#slide_left_btn {
+    position: relative;
+    float: left;
+    top: 225px;
+    left: 140px;
+}
 
 #slide_right_btn {
     position: relative;
@@ -569,17 +555,10 @@ input {
     right: 150px;
 }
 
-#slide_left_btn {
-    float: left;
-    position: relative;
-    top: 225px;
-    left: 140px;
-}
-
 #time_reduce {
-    margin-bottom: 50px;
-    width: 100%;
     position: relative;
+    width: 100%;
+    margin-bottom: 50px;
 }
 
 #reduce_header {
@@ -592,49 +571,71 @@ input {
     color: #5B98C7;
 }
 
-
 #reduce_para {
     position: relative;
+    width: 800px;
     left: 75px;
+    right: 1000px;
+    top: 40px;
     font-size: 22px;
     line-height: 220%;
-    width: 800px;
-    top: 40px;
-    right: 1000px;
-}
-
-#avg_dispatch_heatmap {
-    height: 100%;
-    height: 550px;
-    width: 500px;
-    position: relative;
-    margin: auto;
-    top: 25px;
-    border: 2px solid #bbb;
 }
 
 #avg_dispatch_heatmap_border {
     position: absolute;
     height: 600px;
     width: 550px;
+    left:  1000px;
+    top: 100px;
     background-color: #ddd;
     border: 2px solid #bbb;
     margin: auto;
-    left:  1000px;
-    top: 100px;
 }
 
-#page_title {
-    text-align: center;
-    font-size: 50px;
+#avg_dispatch_heatmap {
+    position: relative;
+    height: 550px;
+    width: 500px;
+    top: 25px;
+    margin: auto;
+    border: 2px solid #bbb;
 }
 
-#page_para {
+/* Footer */
+
+#bottom_bar {
+    display: inline-block;
+    position: relative;
     text-align: center;
-    font-size: 20px;
+    width: 100%;
+    height: 3%;
+    bottom: 0;
+    line-height: 70px;
+}
+
+#bottom_bar img {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    top: 8px;
+}
+
+#bottom_image {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    margin: -10px -8px -9px -10px;
+    overflow: hidden;
 }
 
 img {
     width: 100%;
     height: 100%;
+}
+
+/* For fixing floating elements */
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
 }

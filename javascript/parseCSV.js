@@ -1,6 +1,6 @@
 $.ajax({
     type: "GET",
-    url: "sfpd_data.csv",
+    url: "data/sfpd_data.csv",
     dataType: "text",
     success: function(data) {
         parseCSV(data);

@@ -1,17 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- To do:
- * change vars to lets?
- * fix quotes
- * organize variables
- * FIXME
- * optimizations
- * comment code
- * give credit to outside resources (Chart.js, etc)
- * fix image locations
- -->
-
 <head>
     <meta charset="UTF-8">
     <meta name="para" content="Statistics and trends from data given by the San Francisco Fire Department.">
@@ -21,7 +10,7 @@
     <title>San Francisco Emergency Trends</title>
 
     <!-- Styling -->
-    <link rel="stylesheet" href="main.css" type="text/css">
+    <link rel="stylesheet" href="style/main.css" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 
@@ -32,15 +21,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 
     <!-- MarkerClusterer.js, used for mapping incident locations -->
-    <script src="markerclusterer.js"></script>
+    <script src="javascript/markerclusterer.js"></script>
 
     <!-- My own JS files -->
-    <script src="parseCSV.js"></script>
-    <script src="googleMaps.js"></script>
-    <script src="utils.js"></script>
-    <script src="getCategoryData.js"></script>
-    <script src="mostLikelyDispatch.js"></script>
-    <script src="chartData.js"></script>
+    <script src="javascript/parseCSV.js"></script>
+    <script src="javascript/utils.js"></script>
+    <script src="javascript/googleMaps.js"></script>
+    <script src="javascript/getCategoryData.js"></script>
+    <script src="javascript/mostLikelyDispatch.js"></script>
+    <script src="javascript/chartData.js"></script>
 </head>
 
 <body>
@@ -711,12 +700,12 @@
 
         <div id="bottom_bar">
             <a href="https://github.com/katherinekolman/emergency-data-website" target="_blank">
-                    <img src="images/GitHub-Mark/PNG/GitHub-Mark-32px.png" />
+                    <img src="images/GitHub-Mark-32px.png" />
                 </a>
         </div>
     </div>
     <div id="bottom_image">
-        <img src="images/goldengatebridge2.jpg" />
+        <img src="images/goldengatebridge.jpg" />
     </div>
 
     <!-- Google Maps API, used for mapping data -->
