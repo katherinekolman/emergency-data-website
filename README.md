@@ -1,7 +1,7 @@
 # emergency-data-website
 This website was built for the final round of the Capital One Software Engineering Summit 2018. 
 
-[Here](https://katherinekolman.github.io/emergency-data-website) is a link to the deployed website, best viewed in Firefox/Chrome.
+[Here](https://katherinekolman.github.io/sffd-analytics/) is a link to the deployed website, best viewed in Firefox/Chrome.
 
 ## Project Goals
 
